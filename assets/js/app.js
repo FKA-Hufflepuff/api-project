@@ -4,7 +4,7 @@ const tmdbAPIkey = 'c20ca68e2a577a2aebe1461e51d16a32';
 let moodIndex = null;
 let yourMood = null;
 let movieList = [];
-let movieTitles =  [];
+let movieTitles = [];
 
 
 
@@ -122,3 +122,27 @@ $('.moodButtons').click(function () {
 })
 
 
+
+
+///////////////// Youtube API
+
+
+let tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+$(tag).insertBefore($('script:first'))
+
+let player;
+
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('moodMovies', {
+        height: '480',
+        width: '640',
+
+    })
+
+    player.cuePlaylist({
+        listType: 'search',
+        // list: movieTitles[0]
+        list: 'Batman'
+    })
+}
