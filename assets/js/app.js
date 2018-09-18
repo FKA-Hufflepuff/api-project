@@ -118,7 +118,28 @@ $('.moodButtons').click(function () {
         movieTitles = movieList.map(x => x.title);
         console.log(movieList);
         console.log(movieTitles);
+        player0.cuePlaylist({
+            listType: 'search',
+            list: movieTitles[0] + ' trailer'
+        })
+        player1.cuePlaylist({
+            listType: 'search',
+            list: movieTitles[1] + ' trailer'
+        })
+        player2.cuePlaylist({
+            listType: 'search',
+            list: movieTitles[2] + ' trailer'
+        })
+        player3.cuePlaylist({
+            listType: 'search',
+            list: movieTitles[3] + ' trailer'
+        })
+        player4.cuePlaylist({
+            listType: 'search',
+            list: movieTitles[4] + ' trailer'
+        })
     })
+    
 })
 
 
@@ -131,18 +152,51 @@ let tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 $(tag).insertBefore($('script:first'))
 
-let player;
+let player0;
+let player1;
+let player2;
+let player3;
+let player4;
 
 function onYouTubeIframeAPIReady() {
-    player = new YT.Player('moodMovies', {
+    player0 = new YT.Player('moodMovie0', {
         height: '480',
         width: '640',
+        videoId: '',
+        playerVars: {listType: 'search',
+        list: ''}
 
     })
+    player1 = new YT.Player('moodMovie1', {
+        height: '480',
+        width: '640',
+        videoId: '',
+        playerVars: {listType: 'search',
+        list: ''}
 
-    player.cuePlaylist({
-        listType: 'search',
-        // list: movieTitles[0]
-        list: 'Batman'
     })
+    player2 = new YT.Player('moodMovie2', {
+        height: '480',
+        width: '640',
+        videoId: '',
+        playerVars: {listType: 'search',
+        list: ''}
+
+    })
+    player3 = new YT.Player('moodMovie3', {
+        height: '480',
+        width: '640',
+        videoId: '',
+        playerVars: {listType: 'search',
+        list: ''}
+
+    })
+    player4 = new YT.Player('moodMovie4', {
+        height: '480',
+        width: '640',
+        videoId: '',
+        playerVars: {listType: 'search',
+        list: ''}
+
+    }) 
 }
