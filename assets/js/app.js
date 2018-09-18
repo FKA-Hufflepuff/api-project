@@ -152,7 +152,7 @@ let tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 $(tag).insertBefore($('script:first'))
 
-let player;
+let player0;
 let player1;
 let player2;
 let player3;
