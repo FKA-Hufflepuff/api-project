@@ -159,7 +159,7 @@ let player3;
 let player4;
 
 function onYouTubeIframeAPIReady() {
-    player0 = new YT.Player('moodMovie1', {
+    player0 = new YT.Player('moodMovie0', {
         height: '480',
         width: '640',
         videoId: '',
@@ -167,7 +167,7 @@ function onYouTubeIframeAPIReady() {
         list: ''}
 
     })
-    player1 = new YT.Player('moodMovie2', {
+    player1 = new YT.Player('moodMovie1', {
         height: '480',
         width: '640',
         videoId: '',
@@ -175,7 +175,7 @@ function onYouTubeIframeAPIReady() {
         list: ''}
 
     })
-    player2 = new YT.Player('moodMovie3', {
+    player2 = new YT.Player('moodMovie2', {
         height: '480',
         width: '640',
         videoId: '',
@@ -183,7 +183,7 @@ function onYouTubeIframeAPIReady() {
         list: ''}
 
     })
-    player3 = new YT.Player('moodMovie4', {
+    player3 = new YT.Player('moodMovie3', {
         height: '480',
         width: '640',
         videoId: '',
@@ -191,7 +191,7 @@ function onYouTubeIframeAPIReady() {
         list: ''}
 
     })
-    player4 = new YT.Player('moodMovie5', {
+    player4 = new YT.Player('moodMovie4', {
         height: '480',
         width: '640',
         videoId: '',
