@@ -5,7 +5,19 @@ let moodIndex = null;
 let yourMood = null;
 let movieList = [];
 let movieTitles = [];
-
+const randomGrabber = (movieObject) => {
+    let i = 0;
+    let arrayOfPages = [];
+    while (i < movieObject.total_pages && i < 100) {
+        arrayOfPages.push(i)
+        i++
+    }
+    let fiveRandomPages = _.sample(arrayOfPages, 5)
+    return fiveRandomPages;
+}
+const randomNum = (min, max) => {
+    return Math.floor((Math.random() * (max - min)) + min)
+}
 
 
 
@@ -104,47 +116,6 @@ const moodObjectArray = [happy, sad, mad, silly, lonely, shameful, lost, peacefu
 const moodStringArray = moodObjectArray.map(x => x.english)
 let moodWord = '';
 
-$('.moodButtons').click(function () {
-    moodWord = $(this).attr('mood')
-    moodIndex = moodStringArray.indexOf(moodWord);
-    let yourMood = moodObjectArray[moodIndex]
-    console.log(yourMood)
-    let moodQueryUrl = `https://api.themoviedb.org/3/discover/movie?with_keywords=${yourMood.plotWords[0]}|${yourMood.plotWords[1]}|${yourMood.plotWords[2]}&with_genres=${yourMood.genres[0]}|${yourMood.genres[1]}|${yourMood.genres[2]}&page=1&include_adult=false&language=en-US&api_key=${tmdbAPIkey}`;
-    // let moodQueryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${yourMood.genres[0]}|${yourMood.genres[1]}|${yourMood.genres[2]}&vote_count.gte=100&page=1&include_video=false&include_adult=false&sort_by=vote_average.desc&language=en-US&api_key=${tmdbAPIkey}`;
-    console.log(moodQueryUrl);
-    $.get(moodQueryUrl).then((response) => {
-        console.log(response);
-        movieList = _.sample(response.results, 5);
-        movieTitles = movieList.map(x => x.title);
-        console.log(movieList);
-        console.log(movieTitles);
-        player0.cuePlaylist({
-            listType: 'search',
-            list: movieTitles[0] + ' trailer'
-        })
-        player1.cuePlaylist({
-            listType: 'search',
-            list: movieTitles[1] + ' trailer'
-        })
-        player2.cuePlaylist({
-            listType: 'search',
-            list: movieTitles[2] + ' trailer'
-        })
-        player3.cuePlaylist({
-            listType: 'search',
-            list: movieTitles[3] + ' trailer'
-        })
-        player4.cuePlaylist({
-            listType: 'search',
-            list: movieTitles[4] + ' trailer'
-        })
-    })
-    
-})
-
-
-
-
 ///////////////// Youtube API
 
 
@@ -163,40 +134,111 @@ function onYouTubeIframeAPIReady() {
         height: '480',
         width: '640',
         videoId: '',
-        playerVars: {listType: 'search',
-        list: ''}
+        playerVars: {
+            listType: 'search',
+            list: ''
+        }
 
     })
     player1 = new YT.Player('moodMovie1', {
         height: '480',
         width: '640',
         videoId: '',
-        playerVars: {listType: 'search',
-        list: ''}
+        playerVars: {
+            listType: 'search',
+            list: ''
+        }
 
     })
     player2 = new YT.Player('moodMovie2', {
         height: '480',
         width: '640',
         videoId: '',
-        playerVars: {listType: 'search',
-        list: ''}
+        playerVars: {
+            listType: 'search',
+            list: ''
+        }
 
     })
     player3 = new YT.Player('moodMovie3', {
         height: '480',
         width: '640',
         videoId: '',
-        playerVars: {listType: 'search',
-        list: ''}
+        playerVars: {
+            listType: 'search',
+            list: ''
+        }
 
     })
     player4 = new YT.Player('moodMovie4', {
         height: '480',
         width: '640',
         videoId: '',
-        playerVars: {listType: 'search',
-        list: ''}
+        playerVars: {
+            listType: 'search',
+            list: ''
+        }
 
-    }) 
+    })
 }
+
+const placeVideos = (movieList) => {
+    movieTitles = movieList.map(x => x.title);
+    console.log(movieList);
+    console.log(movieTitles);
+    player0.cuePlaylist({
+        listType: 'search',
+        list: movieTitles[0] + ' trailer'
+    })
+    player1.cuePlaylist({
+        listType: 'search',
+        list: movieTitles[1] + ' trailer'
+    })
+    player2.cuePlaylist({
+        listType: 'search',
+        list: movieTitles[2] + ' trailer'
+    })
+    player3.cuePlaylist({
+        listType: 'search',
+        list: movieTitles[3] + ' trailer'
+    })
+    player4.cuePlaylist({
+        listType: 'search',
+        list: movieTitles[4] + ' trailer'
+    })
+}
+
+const fiveRandomMovies = (response, yourMood) => {
+    fiveRandomPages = randomGrabber(response)
+    for (var i = 0; i < 5; i++) {
+        let page = fiveRandomPages[i]
+        let moodQueryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${yourMood.genres[0]}|${yourMood.genres[1]}|${yourMood.genres[2]}&page=${page}&include_adult=false&language=en-US&api_key=${tmdbAPIkey}`;
+        $.get(moodQueryUrl).then((response) => {
+            let index = randomNum(0, 19);
+            let currentMovie = response.results[index];
+            movieList.push(currentMovie);
+            if (movieList.length === 5) {
+                placeVideos(movieList);
+            }
+
+        })
+    }
+
+}
+
+$('.moodButtons').click(function () {
+    movieList = [];
+    moodWord = $(this).attr('mood')
+    moodIndex = moodStringArray.indexOf(moodWord);
+    let yourMood = moodObjectArray[moodIndex]
+    console.log(yourMood)
+    // let moodQueryUrl = `https://api.themoviedb.org/3/discover/movie?with_keywords=${yourMood.plotWords[0]}|${yourMood.plotWords[1]}|${yourMood.plotWords[2]}&with_genres=${yourMood.genres[0]}|${yourMood.genres[1]}|${yourMood.genres[2]}&page=$&include_adult=false&language=en-US&api_key=${tmdbAPIkey}`;
+    let moodQueryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${yourMood.genres[0]}|${yourMood.genres[1]}|${yourMood.genres[2]}&page=1&include_adult=false&language=en-US&api_key=${tmdbAPIkey}`;
+    console.log(moodQueryUrl);
+    $.get(moodQueryUrl).then((response) => {
+        console.log(response);
+        console.log(response.total_pages)
+        fiveRandomMovies(response, yourMood);
+    })
+
+})
