@@ -39,96 +39,96 @@ let youtubeAPIReady = false;
 
 function onYouTubeIframeAPIReady() {
     youtubeAPIReady = true;
-    player0 = new YT.Player('moodMovie0', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
+//     player0 = new YT.Player('moodMovie0', {
+//         height: '200',
+//         width: '250',
+//         videoId: '',
+//         playerVars: {
+//             listType: 'search',
+//             list: ''
+//         }
 
-    })
-    player1 = new YT.Player('moodMovie1', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
+//     })
+//     player1 = new YT.Player('moodMovie1', {
+//         height: '200',
+//         width: '250',
+//         videoId: '',
+//         playerVars: {
+//             listType: 'search',
+//             list: ''
+//         }
 
-    })
-    player2 = new YT.Player('moodMovie2', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
+//     })
+//     player2 = new YT.Player('moodMovie2', {
+//         height: '200',
+//         width: '250',
+//         videoId: '',
+//         playerVars: {
+//             listType: 'search',
+//             list: ''
+//         }
 
-    })
-    player3 = new YT.Player('moodMovie3', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
+//     })
+//     player3 = new YT.Player('moodMovie3', {
+//         height: '200',
+//         width: '250',
+//         videoId: '',
+//         playerVars: {
+//             listType: 'search',
+//             list: ''
+//         }
 
-    })
-    player4 = new YT.Player('moodMovie4', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
+//     })
+//     player4 = new YT.Player('moodMovie4', {
+//         height: '200',
+//         width: '250',
+//         videoId: '',
+//         playerVars: {
+//             listType: 'search',
+//             list: ''
+//         }
 
-    })
-    player5 = new YT.Player('moodMovie5', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
+//     })
+//     player5 = new YT.Player('moodMovie5', {
+//         height: '200',
+//         width: '250',
+//         videoId: '',
+//         playerVars: {
+//             listType: 'search',
+//             list: ''
+//         }
 
-    })
-}
+//     })
+// }
 
-const placeVideos = (movieList) => {
-    movieTitles = movieList.map(x => x.title);
-    console.log(movieList);
-    console.log(movieTitles);
-    player0.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[0] + ' trailer'
-    })
-    player1.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[1] + ' trailer'
-    })
-    player2.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[2] + ' trailer'
-    })
-    player3.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[3] + ' trailer'
-    })
-    player4.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[4] + ' trailer'
-    })
-    player5.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[5] + ' trailer'
-    })
+// const placeVideos = (movieList) => {
+//     movieTitles = movieList.map(x => x.title);
+//     console.log(movieList);
+//     console.log(movieTitles);
+//     player0.cuePlaylist({
+//         listType: 'search',
+//         list: movieTitles[0] + ' trailer'
+//     })
+//     player1.cuePlaylist({
+//         listType: 'search',
+//         list: movieTitles[1] + ' trailer'
+//     })
+//     player2.cuePlaylist({
+//         listType: 'search',
+//         list: movieTitles[2] + ' trailer'
+//     })
+//     player3.cuePlaylist({
+//         listType: 'search',
+//         list: movieTitles[3] + ' trailer'
+//     })
+//     player4.cuePlaylist({
+//         listType: 'search',
+//         list: movieTitles[4] + ' trailer'
+//     })
+//     player5.cuePlaylist({
+//         listType: 'search',
+//         list: movieTitles[5] + ' trailer'
+//     })
 }
 
 
@@ -229,31 +229,27 @@ let moodWord = '';
 let players = [player0, player1, player2, player3, player4, player5];
 const playerGenerator = (indx, movieList) => {
     movieTitles = movieList.map(x => x.title);
-    // let newPlayer = players[index]
-    // player0 = new YT.Player(`moodMovie${indx}`, {
-    //     height: '480',
-    //     width: '640',
-    //     videoId: '',
-    //     playerVars: {
-    //         listType: 'search',
-    //         list: ''
-    //     }
-    // })
-
-    player0.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[indx] + ' trailer'
+    let newPlayer = players[indx]
+    newPlayer = new YT.Player(`moodMovie${indx}`, {
+        height: '200',
+        width: '300',
+        videoId: '',
+        playerVars: {
+            listType: 'search',
+            list: ''
+        }
     })
-
-
-
-
+    console.log(movieTitles[indx])
+    // newPlayer.cuePlaylist({
+    //     listType: 'search',
+    //     list: movieTitles[indx] + ' trailer'
+    // })
 }
 
 const cardGenerator = (movieList) => {
     $('#cardsGoHere').empty();
     $('#cardsGoHere').append('<div class="container" id="cardContainer">')
-    $('#cardContainer').append('<div class="card-deck" id="movieCards1">', '<div class="card-deck" id="movieCards2">', '<div class="card-deck" id="movieCards3">')
+    $('#cardContainer').append('<div class="card-deck" id="movieCards1">', '<div class="card-deck" id="movieCards2">')
     for (let i = 0; i < movieList.length; i++) {
         console.log('generated')
         let card = $(`<div class="card" id="card${i}">`)
@@ -261,14 +257,11 @@ const cardGenerator = (movieList) => {
         let cardBody = $(`<div class="card-body">`)
         let cardTitle = $(`<h2 class="card-title">${movieList[i].original_title}</h2>`)
         cardBody.append(cardTitle)
-        if (i < 2) {
+        if (i < 3) {
             $('#movieCards1').append(card)
             $(`#card${i}`).append(cardTop, cardBody)
-        } else if (i > 1 && i < 4) {
+        } else if (i > 2) {
             $('#movieCards2').append(card)
-            $(`#card${i}`).append(cardTop, cardBody)
-        } else {
-            $('#movieCards3').append(card)
             $(`#card${i}`).append(cardTop, cardBody)
         }
         $(`#moodMovie${i}`).click((event) => {
