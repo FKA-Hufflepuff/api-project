@@ -39,98 +39,7 @@ let youtubeAPIReady = false;
 
 function onYouTubeIframeAPIReady() {
     youtubeAPIReady = true;
-//     player0 = new YT.Player('moodMovie0', {
-//         height: '200',
-//         width: '250',
-//         videoId: '',
-//         playerVars: {
-//             listType: 'search',
-//             list: ''
-//         }
-
-//     })
-//     player1 = new YT.Player('moodMovie1', {
-//         height: '200',
-//         width: '250',
-//         videoId: '',
-//         playerVars: {
-//             listType: 'search',
-//             list: ''
-//         }
-
-//     })
-//     player2 = new YT.Player('moodMovie2', {
-//         height: '200',
-//         width: '250',
-//         videoId: '',
-//         playerVars: {
-//             listType: 'search',
-//             list: ''
-//         }
-
-//     })
-//     player3 = new YT.Player('moodMovie3', {
-//         height: '200',
-//         width: '250',
-//         videoId: '',
-//         playerVars: {
-//             listType: 'search',
-//             list: ''
-//         }
-
-//     })
-//     player4 = new YT.Player('moodMovie4', {
-//         height: '200',
-//         width: '250',
-//         videoId: '',
-//         playerVars: {
-//             listType: 'search',
-//             list: ''
-//         }
-
-//     })
-//     player5 = new YT.Player('moodMovie5', {
-//         height: '200',
-//         width: '250',
-//         videoId: '',
-//         playerVars: {
-//             listType: 'search',
-//             list: ''
-//         }
-
-//     })
-// }
-
-// const placeVideos = (movieList) => {
-//     movieTitles = movieList.map(x => x.title);
-//     console.log(movieList);
-//     console.log(movieTitles);
-//     player0.cuePlaylist({
-//         listType: 'search',
-//         list: movieTitles[0] + ' trailer'
-//     })
-//     player1.cuePlaylist({
-//         listType: 'search',
-//         list: movieTitles[1] + ' trailer'
-//     })
-//     player2.cuePlaylist({
-//         listType: 'search',
-//         list: movieTitles[2] + ' trailer'
-//     })
-//     player3.cuePlaylist({
-//         listType: 'search',
-//         list: movieTitles[3] + ' trailer'
-//     })
-//     player4.cuePlaylist({
-//         listType: 'search',
-//         list: movieTitles[4] + ' trailer'
-//     })
-//     player5.cuePlaylist({
-//         listType: 'search',
-//         list: movieTitles[5] + ' trailer'
-//     })
 }
-
 
 ////////////// Used to get List of Genres IDs 
 // let genreQueryUrl = `https://api.themoviedb.org/3/genre/movie/list?api_key=${tmdbAPIkey}&language=en-US`
@@ -229,6 +138,14 @@ let moodWord = '';
 let players = [player0, player1, player2, player3, player4, player5];
 const playerGenerator = (indx, movieList) => {
     movieTitles = movieList.map(x => x.title);
+
+    const onPlayerReady = (event) => {
+        event.target.cuePlaylist({
+            listType: 'search',
+            list: movieTitles[indx] + ' trailer'
+        })
+    }
+
     let newPlayer = players[indx]
     newPlayer = new YT.Player(`moodMovie${indx}`, {
         height: '200',
@@ -237,14 +154,17 @@ const playerGenerator = (indx, movieList) => {
         playerVars: {
             listType: 'search',
             list: ''
+        },
+        events: {
+            'onReady': onPlayerReady
         }
     })
-    console.log(movieTitles[indx])
-    // newPlayer.cuePlaylist({
-    //     listType: 'search',
-    //     list: movieTitles[indx] + ' trailer'
-    // })
 }
+
+
+
+    
+
 
 const cardGenerator = (movieList) => {
     $('#cardsGoHere').empty();
