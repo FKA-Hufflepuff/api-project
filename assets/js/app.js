@@ -108,8 +108,12 @@ function onYouTubeIframeAPIReady() {
 /// work in progress ////////
 
 const keywordObject = {
-    happy: [9713, 231591, 9802, 220996],
-    sad: [10943, 33607, 244633, 197823, 245371, 233003]
+    happy: ['friends', 'charming', 'exciting'],
+    sad: ['dark', 'tragic', 'lonely'],
+    mad: ['cruel', 'angry', 'ruin'],
+    lonely: ['dystopain', 'heartbroken', 'personal'],
+    inLove: ['magical', 'charming', 'love'],
+    silly: ['exciting', 'outrageous', 'independent'],
 }
 /////////////////////////
 
@@ -124,15 +128,13 @@ function MoodProfile(moodEnglish, moodIndex, genreIds, plotWords) {
 
 const happy = new MoodProfile('happy', 0, [16, 35, 10751], _.sample(keywordObject.happy, 3))
 const sad = new MoodProfile('sad', 1, [18, 9648, 10749], _.sample(keywordObject.sad, 3))
-const mad = new MoodProfile('mad', 1, [18, 9648, 10749], ['foo', 'foooo', 'bar'])
-const silly = new MoodProfile('silly', 1, [18, 9648, 10749], ['foo', 'foooo', 'bar'])
-const lonely = new MoodProfile('lonely', 1, [18, 9648, 10749], ['foo', 'foooo', 'bar'])
-const shameful = new MoodProfile('shameful', 1, [18, 9648, 10749], ['foo', 'foooo', 'bar'])
-const lost = new MoodProfile('lost', 1, [18, 9648, 10749], ['foo', 'foooo', 'bar'])
-const peaceful = new MoodProfile('peaceful', 1, [18, 9648, 10749], ['foo', 'foooo', 'bar'])
-/// etc.
+const mad = new MoodProfile('mad', 2, [28, 53, 10752], ['foo', 'foooo', 'bar'])
+const lonely = new MoodProfile('lonely', 3, [99, 878, 10749], ['foo', 'foooo', 'bar'])
+const inLove = new MoodProfile('inLove', 4, [12, 35, 10749], ['foo', 'foooo', 'bar'])
+const silly = new MoodProfile('silly', 5, [35, 14, 10402], ['foo', 'foooo', 'bar'])
 
-const moodObjectArray = [happy, sad, mad, silly, lonely, shameful, lost, peaceful]
+
+const moodObjectArray = [happy, sad, mad, lonely, inLove, silly]
 const moodStringArray = moodObjectArray.map(x => x.english)
 let moodWord = '';
 let players = [player0, player1, player2, player3, player4, player5];
