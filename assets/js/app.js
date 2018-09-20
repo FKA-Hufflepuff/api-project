@@ -8,17 +8,128 @@ let movieTitles = [];
 const randomGrabber = (movieObject) => {
     let i = 0;
     let arrayOfPages = [];
+
+    //// This is ridiculously inefficient but uses the required _.js library 
     while (i < movieObject.total_pages && i < 100) {
         arrayOfPages.push(i)
         i++
     }
-    let fiveRandomPages = _.sample(arrayOfPages, 5)
-    return fiveRandomPages;
+    let sixRandomPages = _.sample(arrayOfPages, 6)
+    ////////////////////////////////////////////////////
+    return sixRandomPages;
 }
 const randomNum = (min, max) => {
     return Math.floor((Math.random() * (max - min)) + min)
 }
 
+///////////////// Youtube API
+
+
+let tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+$(tag).insertBefore($('script:first'))
+
+let player0;
+let player1;
+let player2;
+let player3;
+let player4;
+let player5;
+let youtubeAPIReady = false;
+
+function onYouTubeIframeAPIReady() {
+    youtubeAPIReady = true;
+    player0 = new YT.Player('moodMovie0', {
+        height: '480',
+        width: '640',
+        videoId: '',
+        playerVars: {
+            listType: 'search',
+            list: ''
+        }
+
+    })
+    player1 = new YT.Player('moodMovie1', {
+        height: '480',
+        width: '640',
+        videoId: '',
+        playerVars: {
+            listType: 'search',
+            list: ''
+        }
+
+    })
+    player2 = new YT.Player('moodMovie2', {
+        height: '480',
+        width: '640',
+        videoId: '',
+        playerVars: {
+            listType: 'search',
+            list: ''
+        }
+
+    })
+    player3 = new YT.Player('moodMovie3', {
+        height: '480',
+        width: '640',
+        videoId: '',
+        playerVars: {
+            listType: 'search',
+            list: ''
+        }
+
+    })
+    player4 = new YT.Player('moodMovie4', {
+        height: '480',
+        width: '640',
+        videoId: '',
+        playerVars: {
+            listType: 'search',
+            list: ''
+        }
+
+    })
+    player5 = new YT.Player('moodMovie5', {
+        height: '480',
+        width: '640',
+        videoId: '',
+        playerVars: {
+            listType: 'search',
+            list: ''
+        }
+
+    })
+}
+
+const placeVideos = (movieList) => {
+    movieTitles = movieList.map(x => x.title);
+    console.log(movieList);
+    console.log(movieTitles);
+    player0.cuePlaylist({
+        listType: 'search',
+        list: movieTitles[0] + ' trailer'
+    })
+    player1.cuePlaylist({
+        listType: 'search',
+        list: movieTitles[1] + ' trailer'
+    })
+    player2.cuePlaylist({
+        listType: 'search',
+        list: movieTitles[2] + ' trailer'
+    })
+    player3.cuePlaylist({
+        listType: 'search',
+        list: movieTitles[3] + ' trailer'
+    })
+    player4.cuePlaylist({
+        listType: 'search',
+        list: movieTitles[4] + ' trailer'
+    })
+    player5.cuePlaylist({
+        listType: 'search',
+        list: movieTitles[5] + ' trailer'
+    })
+}
 
 
 ////////////// Used to get List of Genres IDs 
@@ -115,115 +226,76 @@ const peaceful = new MoodProfile('peaceful', 1, [18, 9648, 10749], ['foo', 'fooo
 const moodObjectArray = [happy, sad, mad, silly, lonely, shameful, lost, peaceful]
 const moodStringArray = moodObjectArray.map(x => x.english)
 let moodWord = '';
-
-///////////////// Youtube API
-
-
-let tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-$(tag).insertBefore($('script:first'))
-
-let player0;
-let player1;
-let player2;
-let player3;
-let player4;
-
-function onYouTubeIframeAPIReady() {
-    player0 = new YT.Player('moodMovie0', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
-
-    })
-    player1 = new YT.Player('moodMovie1', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
-
-    })
-    player2 = new YT.Player('moodMovie2', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
-
-    })
-    player3 = new YT.Player('moodMovie3', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
-
-    })
-    player4 = new YT.Player('moodMovie4', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
-
-    })
-}
-
-const placeVideos = (movieList) => {
+let players = [player0, player1, player2, player3, player4, player5];
+const playerGenerator = (indx, movieList) => {
     movieTitles = movieList.map(x => x.title);
-    console.log(movieList);
-    console.log(movieTitles);
+    // let newPlayer = players[index]
+    // player0 = new YT.Player(`moodMovie${indx}`, {
+    //     height: '480',
+    //     width: '640',
+    //     videoId: '',
+    //     playerVars: {
+    //         listType: 'search',
+    //         list: ''
+    //     }
+    // })
+
     player0.cuePlaylist({
         listType: 'search',
-        list: movieTitles[0] + ' trailer'
+        list: movieTitles[indx] + ' trailer'
     })
-    player1.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[1] + ' trailer'
-    })
-    player2.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[2] + ' trailer'
-    })
-    player3.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[3] + ' trailer'
-    })
-    player4.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[4] + ' trailer'
-    })
+
+
+
+
 }
 
-const fiveRandomMovies = (response, yourMood) => {
-    fiveRandomPages = randomGrabber(response)
-    for (var i = 0; i < 5; i++) {
-        let page = fiveRandomPages[i]
+const cardGenerator = (movieList) => {
+    $('#cardsGoHere').empty();
+    $('#cardsGoHere').append('<div class="container" id="cardContainer">')
+    $('#cardContainer').append('<div class="card-deck" id="movieCards1">', '<div class="card-deck" id="movieCards2">', '<div class="card-deck" id="movieCards3">')
+    for (let i = 0; i < movieList.length; i++) {
+        console.log('generated')
+        let card = $(`<div class="card" id="card${i}">`)
+        let cardTop = $(`<div id="moodMovie${i}">` + `<img class="card-img-top" src="http://image.tmdb.org/t/p/w185/${movieList[i].poster_path}">`)
+        let cardBody = $(`<div class="card-body">`)
+        let cardTitle = $(`<h2 class="card-title">${movieList[i].original_title}</h2>`)
+        cardBody.append(cardTitle)
+        if (i < 2) {
+            $('#movieCards1').append(card)
+            $(`#card${i}`).append(cardTop, cardBody)
+        } else if (i > 1 && i < 4) {
+            $('#movieCards2').append(card)
+            $(`#card${i}`).append(cardTop, cardBody)
+        } else {
+            $('#movieCards3').append(card)
+            $(`#card${i}`).append(cardTop, cardBody)
+        }
+        $(`#moodMovie${i}`).click((event) => {
+            playerGenerator(i, movieList)
+        })
+    }
+
+}
+
+
+
+const sixRandomMovies = (response, yourMood) => {
+    sixRandomPages = randomGrabber(response)
+    for (var i = 0; i < 6; i++) {
+        let page = sixRandomPages[i]
         let moodQueryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${yourMood.genres[0]}|${yourMood.genres[1]}|${yourMood.genres[2]}&page=${page}&include_adult=false&language=en-US&api_key=${tmdbAPIkey}`;
         $.get(moodQueryUrl).then((response) => {
             let index = randomNum(0, 19);
             let currentMovie = response.results[index];
-            movieList.push(currentMovie);
-            if (movieList.length === 5) {
-                placeVideos(movieList);
-            }
 
+            movieList.push(currentMovie);
+            if (movieList.length === 6) {
+                cardGenerator(movieList)
+
+            }
         })
     }
-
 }
 
 $('.moodButtons').click(function () {
@@ -238,7 +310,7 @@ $('.moodButtons').click(function () {
     $.get(moodQueryUrl).then((response) => {
         console.log(response);
         console.log(response.total_pages)
-        fiveRandomMovies(response, yourMood);
+        sixRandomMovies(response, yourMood);
     })
 
 })
