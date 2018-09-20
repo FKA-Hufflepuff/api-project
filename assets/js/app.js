@@ -128,6 +128,23 @@ let player1;
 let player2;
 let player3;
 let player4;
+let posterImage;
+let movieTitle;
+let movieOverview;
+let youtubeURL;
+
+//i need help figuring out how to take our response array and turn it back into single movies to grab the various posters, movie titles, and movie overviews for the card -hh
+
+const cardCreator = (image, index) => {
+    let card = $('<div class="card mb-3">')
+    let iframe = $('<iframe class="embed-responsive embed-responsive-16by9" frameborder="0" allowfullscreen="1" allow="autoplay; encrypted-media" title="Youtube video player" width="640" height="480">').attr('src', youtubeURL);
+    let cardBody = $('<div class="card-body">');
+    let cardTitle = $('<h5 class="card-title">').text(movieTitle)
+    let cardText = $('<p class="card-text">').text(movieOverview);
+    cardBody.append(cardTitle, cardText);
+    card.append(iframe, cardBody);
+    $('#cardContainer').append(card)
+}
 
 function onYouTubeIframeAPIReady() {
     player0 = new YT.Player('moodMovie0', {
@@ -239,6 +256,13 @@ $('.moodButtons').click(function () {
         console.log(response);
         console.log(response.total_pages)
         fiveRandomMovies(response, yourMood);
+
+        for (let i = 0; i < fiveRandomMovies; i++) {
+            //create posters for each movie, display on the page
+            //create cards for each movie, hide the cards
+        }
+
+        //when posters are clicked show the corresponding card consisting of movie title, youtube trailers, overview, any other info we want
     })
 
 })
