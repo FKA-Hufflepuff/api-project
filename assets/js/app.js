@@ -248,7 +248,9 @@ $('.moodButtons').click(function () {
     $.get(moodQueryUrl).then((response) => {
         console.log(response);
         console.log(response.total_pages)
+
         sixRandomMovies(response, yourMood);
+
     })
 
 })
