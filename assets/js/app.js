@@ -147,9 +147,9 @@ const playerGenerator = (indx, movieList) => {
     }
 
     let newPlayer = players[indx]
-    newPlayer = new YT.Player(`moodMovie${indx}`, {
-        height: '200',
-        width: '300',
+    newPlayer = new YT.Player('trailerSpace', {
+        height: '480',
+        width: '640',
         videoId: '',
         playerVars: {
             listType: 'search',
@@ -159,6 +159,30 @@ const playerGenerator = (indx, movieList) => {
             'onReady': onPlayerReady
         }
     })
+
+    let currentMovie = movieList[indx];
+
+    let movieInfo = {
+        title: `<h1>${currentMovie.original_title}</h1>`
+    }
+    $('#movieInfoSpace').append(movieInfo.title)
+
+    // WORK IN PROGRESS //
+
+    
+    // let newPlayer = players[indx]
+    // newPlayer = new YT.Player(`moodMovie${indx}`, {
+    //     height: '200',
+    //     width: '300',
+    //     videoId: '',
+    //     playerVars: {
+    //         listType: 'search',
+    //         list: ''
+    //     },
+    //     events: {
+    //         'onReady': onPlayerReady
+    //     }
+    // })
 }
 
 
@@ -185,6 +209,7 @@ const cardGenerator = (movieList) => {
             $(`#card${i}`).append(cardTop, cardBody)
         }
         $(`#moodMovie${i}`).click((event) => {
+            $('.card-img-top').slideUp(300)
             playerGenerator(i, movieList)
         })
     }
