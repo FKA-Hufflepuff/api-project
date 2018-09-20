@@ -8,18 +8,38 @@ let movieTitles = [];
 const randomGrabber = (movieObject) => {
     let i = 0;
     let arrayOfPages = [];
+
+    //// This is ridiculously inefficient but uses the required _.js library 
     while (i < movieObject.total_pages && i < 100) {
         arrayOfPages.push(i)
         i++
     }
-    let fiveRandomPages = _.sample(arrayOfPages, 5)
-    return fiveRandomPages;
+    let sixRandomPages = _.sample(arrayOfPages, 6)
+    ////////////////////////////////////////////////////
+    return sixRandomPages;
 }
 const randomNum = (min, max) => {
     return Math.floor((Math.random() * (max - min)) + min)
 }
 
+///////////////// Youtube API
 
+
+let tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+$(tag).insertBefore($('script:first'))
+
+let player0;
+let player1;
+let player2;
+let player3;
+let player4;
+let player5;
+let youtubeAPIReady = false;
+
+function onYouTubeIframeAPIReady() {
+    youtubeAPIReady = true;
+}
 
 ////////////// Used to get List of Genres IDs 
 // let genreQueryUrl = `https://api.themoviedb.org/3/genre/movie/list?api_key=${tmdbAPIkey}&language=en-US`
@@ -115,132 +135,105 @@ const peaceful = new MoodProfile('peaceful', 1, [18, 9648, 10749], ['foo', 'fooo
 const moodObjectArray = [happy, sad, mad, silly, lonely, shameful, lost, peaceful]
 const moodStringArray = moodObjectArray.map(x => x.english)
 let moodWord = '';
-
-///////////////// Youtube API
-
-
-let tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-$(tag).insertBefore($('script:first'))
-
-let player0;
-let player1;
-let player2;
-let player3;
-let player4;
-let posterImage;
-let movieTitle;
-let movieOverview;
-let youtubeURL;
-
-//i need help figuring out how to take our response array and turn it back into single movies to grab the various posters, movie titles, and movie overviews for the card -hh
-
-const cardCreator = (image, index) => {
-    let card = $('<div class="card mb-3">')
-    let iframe = $('<iframe class="embed-responsive embed-responsive-16by9" frameborder="0" allowfullscreen="1" allow="autoplay; encrypted-media" title="Youtube video player" width="640" height="480">').attr('src', youtubeURL);
-    let cardBody = $('<div class="card-body">');
-    let cardTitle = $('<h5 class="card-title">').text(movieTitle)
-    let cardText = $('<p class="card-text">').text(movieOverview);
-    cardBody.append(cardTitle, cardText);
-    card.append(iframe, cardBody);
-    $('#cardContainer').append(card)
-}
-
-function onYouTubeIframeAPIReady() {
-    player0 = new YT.Player('moodMovie0', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
-
-    })
-    player1 = new YT.Player('moodMovie1', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
-
-    })
-    player2 = new YT.Player('moodMovie2', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
-
-    })
-    player3 = new YT.Player('moodMovie3', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
-
-    })
-    player4 = new YT.Player('moodMovie4', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        }
-
-    })
-}
-
-const placeVideos = (movieList) => {
+let players = [player0, player1, player2, player3, player4, player5];
+const playerGenerator = (indx, movieList) => {
     movieTitles = movieList.map(x => x.title);
-    console.log(movieList);
-    console.log(movieTitles);
-    player0.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[0] + ' trailer'
+
+    const onPlayerReady = (event) => {
+        event.target.cuePlaylist({
+            listType: 'search',
+            list: movieTitles[indx] + ' trailer'
+        })
+    }
+
+    let newPlayer = players[indx]
+    newPlayer = new YT.Player('trailerSpace', {
+        height: '480',
+        width: '640',
+        videoId: '',
+        playerVars: {
+            listType: 'search',
+            list: ''
+        },
+        events: {
+            'onReady': onPlayerReady
+        }
     })
-    player1.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[1] + ' trailer'
-    })
-    player2.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[2] + ' trailer'
-    })
-    player3.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[3] + ' trailer'
-    })
-    player4.cuePlaylist({
-        listType: 'search',
-        list: movieTitles[4] + ' trailer'
-    })
+
+    let currentMovie = movieList[indx];
+
+    let movieInfo = {
+        title: `<h1>${currentMovie.original_title}</h1>`
+    }
+    $('#movieInfoSpace').append(movieInfo.title)
+
+    // WORK IN PROGRESS //
+
+    
+    // let newPlayer = players[indx]
+    // newPlayer = new YT.Player(`moodMovie${indx}`, {
+    //     height: '200',
+    //     width: '300',
+    //     videoId: '',
+    //     playerVars: {
+    //         listType: 'search',
+    //         list: ''
+    //     },
+    //     events: {
+    //         'onReady': onPlayerReady
+    //     }
+    // })
 }
 
-const fiveRandomMovies = (response, yourMood) => {
-    fiveRandomPages = randomGrabber(response)
-    for (var i = 0; i < 5; i++) {
-        let page = fiveRandomPages[i]
+
+
+    
+
+
+const cardGenerator = (movieList) => {
+    $('#cardsGoHere').empty();
+    $('#cardsGoHere').append('<div class="container" id="cardContainer">')
+    $('#cardContainer').append('<div class="card-deck" id="movieCards1">', '<div class="card-deck" id="movieCards2">')
+    for (let i = 0; i < movieList.length; i++) {
+        console.log('generated')
+        let card = $(`<div class="card" id="card${i}">`)
+        let cardTop = $(`<div id="moodMovie${i}">` + `<img class="card-img-top" src="http://image.tmdb.org/t/p/w185/${movieList[i].poster_path}">`)
+        let cardBody = $(`<div class="card-body">`)
+        let cardTitle = $(`<h2 class="card-title">${movieList[i].original_title}</h2>`)
+        cardBody.append(cardTitle)
+        if (i < 3) {
+            $('#movieCards1').append(card)
+            $(`#card${i}`).append(cardTop, cardBody)
+        } else if (i > 2) {
+            $('#movieCards2').append(card)
+            $(`#card${i}`).append(cardTop, cardBody)
+        }
+        $(`#moodMovie${i}`).click((event) => {
+            $('.card-img-top').slideUp(300)
+            playerGenerator(i, movieList)
+        })
+    }
+
+}
+
+
+
+const sixRandomMovies = (response, yourMood) => {
+    sixRandomPages = randomGrabber(response)
+    for (var i = 0; i < 6; i++) {
+        let page = sixRandomPages[i]
         let moodQueryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${yourMood.genres[0]}|${yourMood.genres[1]}|${yourMood.genres[2]}&page=${page}&include_adult=false&language=en-US&api_key=${tmdbAPIkey}`;
         $.get(moodQueryUrl).then((response) => {
             let index = randomNum(0, 19);
             let currentMovie = response.results[index];
-            movieList.push(currentMovie);
-            if (movieList.length === 5) {
-                placeVideos(movieList);
-            }
 
+            movieList.push(currentMovie);
+            if (movieList.length === 6) {
+                cardGenerator(movieList)
+
+            }
         })
     }
-
 }
 
 $('.moodButtons').click(function () {
@@ -255,14 +248,9 @@ $('.moodButtons').click(function () {
     $.get(moodQueryUrl).then((response) => {
         console.log(response);
         console.log(response.total_pages)
-        fiveRandomMovies(response, yourMood);
 
-        for (let i = 0; i < fiveRandomMovies; i++) {
-            //create posters for each movie, display on the page
-            //create cards for each movie, hide the cards
-        }
+        sixRandomMovies(response, yourMood);
 
-        //when posters are clicked show the corresponding card consisting of movie title, youtube trailers, overview, any other info we want
     })
 
 })

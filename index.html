@@ -7,38 +7,48 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css?family=Cabin+Sketch" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Cabin+Sketch" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <title>API-Project</title>
 </head>
 
 <body>
-    <div class="jumbotron jumbotron-fluid">
-            <h1 class="display-4">
-                <p class="text-center">Lets get sad :(</p>
-            </h1>
+    <div class="container">
+        <div class="jumbotron jumbotron-fluid my-2">
+            <h1 class="display-4 text-center"> Lets get sad :(</h1>
         </div>
     </div>
-    <div class="col-xs-1 text-center">
-        <button type="button" class="moodButtons" mood='happy'>Happy</button>
-        <button type="button" class="moodButtons" mood="sad">Sad</button>
-        <button type="button" class="moodButtons" mood="mad">Mad</button>
-        <button type="button" class="moodButtons" mood="silly">Silly</button>
-        <button type="button" class="moodButtons" mood="lonley">Lonely</button>
+   <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-sm-12" id="trailerSpace">
+
+            </div>
+            <div class="col-md-4 col-sm-12" id="movieInfoSpace">
+
+            </div>
+        </div>
     </div>
 
-  <div class="container">
-      
-      <div id="cardContainer">
-
-      </div>
-    
-  </div>
-
+    <div class="container">
+        <div class='row'>
+            <div class="col-xs-12 text-center my-2 mx-auto">
+                <div class='btn-group'>
+                    <button type="button" class="moodButtons btn btn-primary" mood='happy'>Happy</button>
+                    <button type="button" class="moodButtons btn btn-primary" mood="sad">Sad</button>
+                    <button type="button" class="moodButtons btn btn-primary" mood="mad">Mad</button>
+                    <button type="button" class="moodButtons btn btn-primary" mood="silly">Silly</button>
+                    <button type="button" class="moodButtons btn btn-primary" mood="lonely">Lonely</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+    <div id="cardsGoHere"></div>
+  
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src ="assets/js/underscore-min.js"></script>
+<script src="assets/js/underscore-min.js"></script>
 <script type="text/javascript" src="assets/js/app.js"></script>
 
 
