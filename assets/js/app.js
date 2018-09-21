@@ -3,12 +3,19 @@ let moodIndex = 0;
 let yourMood = {};
 let movieList = [];
 let movieTitles = [];
+let carouselLoaded = false;
 
 let tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 $(tag).insertBefore($('script:first'))
 
 let player0 = {};
+let player1 = {};
+let player2 = {};
+let player3 = {};
+let player4 = {};
+let player5 = {};
+let players = [player0, player1, player2, player3, player4, player5]
 let youtubeAPIReady = false;
 
 function onYouTubeIframeAPIReady() {
@@ -34,41 +41,55 @@ const moodObjectArray = [happy, sad, mad, lonely, inLove, silly]
 const moodStringArray = moodObjectArray.map(x => x.english)
 let moodWord = '';
 
-const playerGenerator = (index, movieList) => {
+const carouselFiller = (index, movieList) => {
+
     movieTitles = movieList.map(x => x.title);
+    $(`#slide${index}`).addClass('active');
+    $(`#slide${index}`).siblings().removeClass('active');
+    $(`#carouselIndicator${index}`).addClass('active');
+    $(`#carouselIndicator${index}`).siblings().removeClass('active')
 
-    const onPlayerReady = (event) => {
-        event.target.cuePlaylist({
-            listType: 'search',
-            list: movieTitles[index] + ' trailer'
+    for (let i = 0; i < 6; i++)  {
+        $(`#caption${i}`).empty().append(`<h3>${movieTitles[i]}</h3> <h5>${movieList[i].release_date}</h5>`)
+    }
+
+    if (carouselLoaded === false) {
+        $('#carouselContainer').show();
+        $('.carousel').carousel({
+            interval: 0
         })
-    }
-
-    if (!_.isEmpty(player0)) {
-        console.log(player0);
-        player0.destroy();
-    }
-
-    player0 = new YT.Player('trailerSpace', {
-        height: '480',
-        width: '640',
-        videoId: '',
-        playerVars: {
-            listType: 'search',
-            list: ''
-        },
-        events: {
-            'onReady': onPlayerReady
+        for (let i = 0; i < 6; i++) {
+            const onPlayerReady = (event) => {
+                $('#videoCarousel').on('slide.bs.carousel', () => {
+                    event.target.pauseVideo()
+                })
+                event.target.cuePlaylist({
+                    listType: 'search',
+                    list: movieTitles[i] + ' trailer'
+                })
+            }
+            players[i] = new YT.Player(`moodMovie${i}`, {
+                height: '360',
+                width: '640',
+                videoId: '',
+                playerVars: {
+                    listType: 'search',
+                    list: ''
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            })
         }
-    })
-
-    $('#soloMovie').show()
-    let currentMovie = movieList[index];
-
-    let movieInfo = {
-        title: `<h1>${currentMovie.original_title}</h1>`
+        carouselLoaded = true;
+    } else {
+        for (let i = 0; i < 6; i++) {
+            players[i].cuePlaylist({
+                listType: 'search',
+                list: movieTitles[i] + ' trailer'
+            })
+        }
     }
-    $('#movieInfoSpace').empty().append(movieInfo.title)
 }
 
 const cardGenerator = (movieList) => {
@@ -85,7 +106,8 @@ const cardGenerator = (movieList) => {
         $(`#card${cardIndex}`).append(cardTop, cardBody)
         $(`#card${cardIndex}`).click((event) => {
             $('.card-img-top').slideUp(300)
-            playerGenerator(cardIndex, movieList)
+            // playerGenerator(cardIndex, movieList)
+            carouselFiller(cardIndex, movieList);
         })
     }
 
@@ -117,7 +139,7 @@ const manyRandomMovies = (yourMood) => {
             if (!response) {
                 console.log('error')
             }
-             arrayOfMovieArrays.push(response.results)
+            arrayOfMovieArrays.push(response.results)
             if (arrayOfMovieArrays.length === 50) {
                 allMovies = _.flatten(arrayOfMovieArrays);
                 allPlots = _.pluck(allMovies, 'overview');

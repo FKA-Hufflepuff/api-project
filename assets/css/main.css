@@ -119,3 +119,7 @@ button:hover .middle {
     padding: 5px;
 
 }
+
+.carousel-caption {
+    -webkit-text-stroke: 1px black;
+  }
