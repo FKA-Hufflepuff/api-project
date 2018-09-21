@@ -6,20 +6,16 @@ let yourMood = null;
 let movieList = [];
 let movieTitles = [];
 const randomGrabber = (movieObject) => {
-    let i = 0;
-    let arrayOfPages = [];
-
-    //// This is ridiculously inefficient but uses the required _.js library 
-    while (i < movieObject.total_pages && i < 100) {
-        arrayOfPages.push(i)
-        i++
+    let maxNumber = movieObject.total_pages;
+    if (movieObject.total_pages > 100) {
+        maxNumber = 100;
     }
-    let sixRandomPages = _.sample(arrayOfPages, 6)
-    ////////////////////////////////////////////////////
-    return sixRandomPages;
-}
-const randomNum = (min, max) => {
-    return Math.floor((Math.random() * (max - min)) + min)
+    // let sixRandomPages = _.times(6, () => _.random(maxNumber))
+    // console.log(sixRandomPages)
+    // return sixRandomPages;
+    let manyRandomPages = _.times(50, () => _.random(maxNumber))
+    console.log(manyRandomPages)
+    return manyRandomPages;
 }
 
 ///////////////// Youtube API
@@ -108,7 +104,7 @@ function onYouTubeIframeAPIReady() {
 /// work in progress ////////
 
 const keywordObject = {
-    happy: [9713, 231591, 9802, 220996],
+    happy: ['friends', 'charming', 'exciting'],
     sad: [10943, 33607, 244633, 197823, 245371, 233003]
 }
 /////////////////////////
@@ -169,7 +165,7 @@ const playerGenerator = (indx, movieList) => {
 
     // WORK IN PROGRESS //
 
-    
+
     // let newPlayer = players[indx]
     // newPlayer = new YT.Player(`moodMovie${indx}`, {
     //     height: '200',
@@ -187,7 +183,7 @@ const playerGenerator = (indx, movieList) => {
 
 
 
-    
+
 
 
 const cardGenerator = (movieList) => {
@@ -216,24 +212,43 @@ const cardGenerator = (movieList) => {
 
 }
 
+const checkPlots = (allMovies, plots, mood) => {
+    let allApplicableMovies = []
+    for (let i = 0; i < plots.length; i++) {
+        for (let idx = 0; idx < mood.plotWords.length; idx++) {
+            if (plots[i].includes(mood.plotWords[idx])) {
+                allApplicableMovies.push(allMovies[i])
+            }
+        }
+        if (i === plots.length - 1) {
+            console.log(allApplicableMovies)
+        }
+    }
+}
 
-
-const sixRandomMovies = (response, yourMood) => {
+const manyRandomMovies = (response, yourMood) => {
+    console.log(response)
     sixRandomPages = randomGrabber(response)
-    for (var i = 0; i < 6; i++) {
+    let allMovies = [];
+    let allPlots = [];
+    for (let i = 0; i < 50; i++) {
         let page = sixRandomPages[i]
         let moodQueryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${yourMood.genres[0]}|${yourMood.genres[1]}|${yourMood.genres[2]}&page=${page}&include_adult=false&language=en-US&api_key=${tmdbAPIkey}`;
         $.get(moodQueryUrl).then((response) => {
-            let index = randomNum(0, 19);
-            let currentMovie = response.results[index];
-
-            movieList.push(currentMovie);
-            if (movieList.length === 6) {
-                cardGenerator(movieList)
-
+            if (!response) {
+                console.log('error')
+            }
+            for (let i = 0; i < 20; i++) {
+                allMovies.push(response.results[i])
+                allPlots.push(response.results[i].overview)
+            }
+            if(allPlots.length === 1000) {
+                checkPlots(allMovies, allPlots, yourMood)
             }
         })
     }
+    console.log(allMovies)
+    console.log(allPlots)
 }
 
 $('.moodButtons').click(function () {
@@ -249,7 +264,7 @@ $('.moodButtons').click(function () {
         console.log(response);
         console.log(response.total_pages)
 
-        sixRandomMovies(response, yourMood);
+        manyRandomMovies(response, yourMood);
 
     })
 
