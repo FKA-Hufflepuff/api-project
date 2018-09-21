@@ -64,13 +64,6 @@ body {
 }
 
 
-* Subscribe modal box #subscribeModal .modal-content {
-  background-color: #303546;
-  color: #fff;
-  text-align: left;
-}
-
-
 @media (min-width: 768px) {
   .masthead {
     position: fixed;
