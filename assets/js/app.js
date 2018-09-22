@@ -1,14 +1,11 @@
+//////////// Global Vars /////////////////
+
 const tmdbAPIkey = 'c20ca68e2a577a2aebe1461e51d16a32';
 let moodIndex = 0;
 let yourMood = {};
 let movieList = [];
 let movieTitles = [];
 let carouselLoaded = false;
-
-let tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-$(tag).insertBefore($('script:first'))
-
 let player0 = {};
 let player1 = {};
 let player2 = {};
@@ -17,12 +14,10 @@ let player4 = {};
 let player5 = {};
 let players = [player0, player1, player2, player3, player4, player5]
 let youtubeAPIReady = false;
-
-function onYouTubeIframeAPIReady() {
-    youtubeAPIReady = true;
-}
+let moodWord = '';
 
 
+//////////////// Mood Profile Construction 
 function MoodProfile(moodEnglish, moodIndex, genreIds, plotWords) {
     this.english = moodEnglish;
     this.index = moodIndex;
@@ -39,8 +34,22 @@ const silly = new MoodProfile('silly', 5, [35, 14, 10402], ['exciting', 'outrage
 
 const moodObjectArray = [happy, sad, mad, lonely, inLove, silly]
 const moodStringArray = moodObjectArray.map(x => x.english)
-let moodWord = '';
 
+
+///////////////////////////////////////
+
+
+///////////// Load iFrame API Asynchronously 
+let tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+$(tag).insertBefore($('script:first'))
+
+function onYouTubeIframeAPIReady() {
+    youtubeAPIReady = true;
+}
+/////////////////////////////////////////////////
+
+//////////////// Places iFrames into Carousel
 const carouselFiller = (index, movieList) => {
 
     movieTitles = movieList.map(x => x.title);
@@ -84,7 +93,9 @@ const carouselFiller = (index, movieList) => {
         }
     }
 }
+////////////////////////
 
+///////////////////// Creates movie cards
 const cardGenerator = (movieList) => {
     $('#cardsGoHere').empty();
     $('#cardsGoHere').append('<div class="container" id="cardContainer">')
@@ -107,7 +118,9 @@ const cardGenerator = (movieList) => {
         })
     }
 }
+/////////////////////////
 
+//////////////////// Check plots for keywords 
 const checkPlots = (allMovies, plots, mood) => {
     let allApplicableMovies = []
     for (let plotIndex = 0; plotIndex < plots.length; plotIndex++) {
@@ -123,7 +136,9 @@ const checkPlots = (allMovies, plots, mood) => {
         }
     }
 }
+//////////////////////////////////
 
+////////////////////// Grabs movies by genre
 const manyRandomMovies = (yourMood) => {
     let arrayOfMovieArrays = [];
     let allMovies = [];
@@ -143,7 +158,10 @@ const manyRandomMovies = (yourMood) => {
         })
     }
 }
+////////////////////
 
+
+/////////////////////// Mood selection
 $('.moodButtons').click(function () {
     $('#carouselContainer').hide()
     $('#soloMovie').hide()
@@ -154,3 +172,4 @@ $('.moodButtons').click(function () {
     console.log(yourMood)
     manyRandomMovies(yourMood);
 })
+/////////////////////////
