@@ -1,5 +1,7 @@
 //////////// Global Vars /////////////////
-
+$(document).ready(() => {
+    $('.mastheadAfterMood').hide()
+})
 const tmdbAPIkey = 'c20ca68e2a577a2aebe1461e51d16a32';
 let moodIndex = 0;
 let yourMood = {};
@@ -15,7 +17,6 @@ let player5 = {};
 let players = [player0, player1, player2, player3, player4, player5]
 let youtubeAPIReady = false;
 let moodWord = '';
-$('.mastheadAfterMood').hide()
 
 //////////////// Mood Profile Construction 
 function MoodProfile(moodEnglish, moodIndex, genreIds, plotWords) {
@@ -143,14 +144,14 @@ const manyRandomMovies = (yourMood) => {
     let arrayOfMovieArrays = [];
     let allMovies = [];
     let allPlots = [];
-    for (let page = 1; page <= 40; page++) {
+    for (let page = 1; page <= 50; page++) {
         let moodQueryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${yourMood.genres[0]}|${yourMood.genres[1]}|${yourMood.genres[2]}&page=${page}&include_adult=false&language=en-US&api_key=${tmdbAPIkey}`;
         $.get(moodQueryUrl).then((response) => {
             if (!response) {
                 console.log('error')
             }
             arrayOfMovieArrays.push(response.results)
-            if (arrayOfMovieArrays.length === 40) {
+            if (arrayOfMovieArrays.length === 50) {
                 allMovies = _.flatten(arrayOfMovieArrays);
                 allPlots = _.pluck(allMovies, 'overview');
                 checkPlots(allMovies, allPlots, yourMood)
