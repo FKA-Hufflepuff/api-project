@@ -10,7 +10,10 @@ We set out to build a simple app to suggest movies based on your mood. No more d
 **Future Features** 
 
 Help us make it better. 
-Facial recognition: take a selfie and get back movies Voice recognition: 
+
+  - Facial recognition: 
+  - take a selfie and get back movies 
+  - Voice recognition: 
 
 
 **Authors**
