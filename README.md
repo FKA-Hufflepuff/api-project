@@ -19,5 +19,6 @@ Nathan Golba, Haley Hartman, Stephen Simcko, Dana Shelton
 
 **Acknowledgments**
 
-API 
+APIs: 
 www.themoviedb.org 
+YouTube: iFrame Player API 
