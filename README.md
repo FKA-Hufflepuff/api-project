@@ -17,7 +17,7 @@ Help us make it better.
 
 **Authors**
 
-Nathan Golba, Haley Hartman, Stephen Simcko, Dana Shelton
+Nathan Golba, Haley Hartman, Stephen Simcko, Dana Shelton, and Will Bursch
 
 **Acknowledgments**
 
