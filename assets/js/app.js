@@ -18,6 +18,8 @@ let player5 = {};
 let players = [player0, player1, player2, player3, player4, player5]
 let youtubeAPIReady = false;
 
+$('.mastheadAfterMood').hide()
+
 function onYouTubeIframeAPIReady() {
     youtubeAPIReady = true;
 }
@@ -96,11 +98,10 @@ const cardGenerator = (movieList) => {
     $('#cardsGoHere').empty();
     $('#cardsGoHere').append('<div class="container" id="cardContainer">')
     $('#cardContainer').append('<div class="card-deck" id="movieCards1">')
-    for (let cardIndex = 0; cardIndex < movieList.length; cardIndex++) {
-        let card = $(`<div class="card" id="card${cardIndex}">`)
+    for (let cardIndex = 0; cardIndex < movieList.length; cardIndex++) {        let card = $(`<div class="card" id="card${cardIndex}">`)
         let cardTop = $(`<div id="moodMovie${cardIndex}">` + `<img class="card-img-top" src="http://image.tmdb.org/t/p/w185/${movieList[cardIndex].poster_path}">`)
         let cardBody = $(`<div class="card-body">`)
-        let cardTitle = $(`<h2 class="card-title text">${movieList[cardIndex].title}</h2>`)
+        let cardTitle = $(`<h5 class="card-text">${movieList[cardIndex].title}</h5><p class="card-text">${movieList[cardIndex].release_date.substring(0, 4)}</p>`)
         cardBody.append(cardTitle)
         $('#movieCards1').append(card)
         $(`#card${cardIndex}`).append(cardTop, cardBody)
@@ -133,14 +134,14 @@ const manyRandomMovies = (yourMood) => {
     let arrayOfMovieArrays = [];
     let allMovies = [];
     let allPlots = [];
-    for (let page = 1; page <= 50; page++) {
+    for (let page = 1; page <= 40; page++) {
         let moodQueryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${yourMood.genres[0]}|${yourMood.genres[1]}|${yourMood.genres[2]}&page=${page}&include_adult=false&language=en-US&api_key=${tmdbAPIkey}`;
         $.get(moodQueryUrl).then((response) => {
             if (!response) {
                 console.log('error')
             }
             arrayOfMovieArrays.push(response.results)
-            if (arrayOfMovieArrays.length === 50) {
+            if (arrayOfMovieArrays.length === 40) {
                 allMovies = _.flatten(arrayOfMovieArrays);
                 allPlots = _.pluck(allMovies, 'overview');
                 checkPlots(allMovies, allPlots, yourMood)
@@ -157,4 +158,8 @@ $('.moodButtons').click(function () {
     let yourMood = moodObjectArray[moodIndex]
     console.log(yourMood)
     manyRandomMovies(yourMood);
+
+    $('.cover-heading').hide()
+    $('.mastheadAfterMood').show()
+
 })
