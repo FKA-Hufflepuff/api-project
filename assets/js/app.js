@@ -133,14 +133,14 @@ const manyRandomMovies = (yourMood) => {
     let arrayOfMovieArrays = [];
     let allMovies = [];
     let allPlots = [];
-    for (let page = 1; page <= 50; page++) {
+    for (let page = 1; page <= 40; page++) {
         let moodQueryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${yourMood.genres[0]}|${yourMood.genres[1]}|${yourMood.genres[2]}&page=${page}&include_adult=false&language=en-US&api_key=${tmdbAPIkey}`;
         $.get(moodQueryUrl).then((response) => {
             if (!response) {
                 console.log('error')
             }
             arrayOfMovieArrays.push(response.results)
-            if (arrayOfMovieArrays.length === 50) {
+            if (arrayOfMovieArrays.length === 40) {
                 allMovies = _.flatten(arrayOfMovieArrays);
                 allPlots = _.pluck(allMovies, 'overview');
                 checkPlots(allMovies, allPlots, yourMood)
