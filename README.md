@@ -1,4 +1,4 @@
-# api-project
+# #Mood: an api-project
 
 Group Project for CWRU combinging a few API's to generate movie suggestions and trailer based on user mood input. 
 
