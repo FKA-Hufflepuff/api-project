@@ -83,9 +83,7 @@ body {
     .mastfoot,
     .cover-container {
         width: 100%;
-
     }
-
 }
 
 @media (min-width: 992px) {
@@ -106,7 +104,11 @@ button {
     border: none;
     opacity: 0.75;
     background: none !important;
-    
+}
+
+button img {
+    height: auto;
+    width: 7vw;
 }
 
 button:hover {
@@ -138,8 +140,8 @@ button:hover {
 }
 
   #carouselContainer {
-      max-width: 640px;
-  }
+    max-width: 640px;
+}
 
 .card-body {
     padding: 0px !important;

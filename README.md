@@ -17,11 +17,12 @@ Help us make it better.
 
 **Authors**
 
-Nathan Golba, Haley Hartman, Stephen Simcko, Dana Shelton, and Will Bursch
+Nathan Golba, Hayley Hartman, Stephen Simko, Dana Shelton, and Will Bursch
 
 **Acknowledgments**
 
 APIs: 
-www.themoviedb.org 
 
-YouTube: iFrame Player API 
+The Movie Database: www.themoviedb.org 
+
+YouTube iFrame PLayer: https://developers.google.com/youtube/iframe_api_reference?
