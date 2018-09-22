@@ -1,14 +1,11 @@
+//////////// Global Vars /////////////////
+
 const tmdbAPIkey = 'c20ca68e2a577a2aebe1461e51d16a32';
 let moodIndex = 0;
 let yourMood = {};
 let movieList = [];
 let movieTitles = [];
 let carouselLoaded = false;
-
-let tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-$(tag).insertBefore($('script:first'))
-
 let player0 = {};
 let player1 = {};
 let player2 = {};
@@ -17,14 +14,15 @@ let player4 = {};
 let player5 = {};
 let players = [player0, player1, player2, player3, player4, player5]
 let youtubeAPIReady = false;
-
+let moodWord = '';
 $('.mastheadAfterMood').hide()
-
 function onYouTubeIframeAPIReady() {
     youtubeAPIReady = true;
 }
 
 
+
+//////////////// Mood Profile Construction 
 function MoodProfile(moodEnglish, moodIndex, genreIds, plotWords) {
     this.english = moodEnglish;
     this.index = moodIndex;
@@ -41,8 +39,22 @@ const silly = new MoodProfile('silly', 5, [35, 14, 10402], ['exciting', 'outrage
 
 const moodObjectArray = [happy, sad, mad, lonely, inLove, silly]
 const moodStringArray = moodObjectArray.map(x => x.english)
-let moodWord = '';
 
+
+///////////////////////////////////////
+
+
+///////////// Load iFrame API Asynchronously 
+let tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+$(tag).insertBefore($('script:first'))
+
+function onYouTubeIframeAPIReady() {
+    youtubeAPIReady = true;
+}
+/////////////////////////////////////////////////
+
+//////////////// Places iFrames into Carousel
 const carouselFiller = (index, movieList) => {
 
     movieTitles = movieList.map(x => x.title);
@@ -50,16 +62,9 @@ const carouselFiller = (index, movieList) => {
     $(`#slide${index}`).siblings().removeClass('active');
     $(`#carouselIndicator${index}`).addClass('active');
     $(`#carouselIndicator${index}`).siblings().removeClass('active')
-
-    for (let i = 0; i < 6; i++)  {
-        $(`#caption${i}`).empty().append(`<h3>${movieTitles[i]}</h3> <h5>${movieList[i].release_date}</h5>`)
-    }
-
     if (carouselLoaded === false) {
         $('#carouselContainer').show();
-        $('.carousel').carousel({
-            interval: 0
-        })
+        $('.carousel').carousel('pause')
         for (let i = 0; i < 6; i++) {
             const onPlayerReady = (event) => {
                 $('#videoCarousel').on('slide.bs.carousel', () => {
@@ -93,7 +98,9 @@ const carouselFiller = (index, movieList) => {
         }
     }
 }
+////////////////////////
 
+///////////////////// Creates movie cards
 const cardGenerator = (movieList) => {
     $('#cardsGoHere').empty();
     $('#cardsGoHere').append('<div class="container" id="cardContainer">')
@@ -102,18 +109,23 @@ const cardGenerator = (movieList) => {
         let cardTop = $(`<div id="moodMovie${cardIndex}">` + `<img class="card-img-top" src="http://image.tmdb.org/t/p/w185/${movieList[cardIndex].poster_path}">`)
         let cardBody = $(`<div class="card-body">`)
         let cardTitle = $(`<h5 class="card-text">${movieList[cardIndex].title}</h5><p class="card-text">${movieList[cardIndex].release_date.substring(0, 4)}</p>`)
+
         cardBody.append(cardTitle)
         $('#movieCards1').append(card)
+        if (cardIndex === 3) {
+            $('#card3').addClass('d-md-block')
+        }
         $(`#card${cardIndex}`).append(cardTop, cardBody)
         $(`#card${cardIndex}`).click((event) => {
             $('.card-img-top').slideUp(300)
-            // playerGenerator(cardIndex, movieList)
+            $('#carouselContainer').show();
             carouselFiller(cardIndex, movieList);
         })
     }
-
 }
+/////////////////////////
 
+//////////////////// Check plots for keywords 
 const checkPlots = (allMovies, plots, mood) => {
     let allApplicableMovies = []
     for (let plotIndex = 0; plotIndex < plots.length; plotIndex++) {
@@ -129,7 +141,9 @@ const checkPlots = (allMovies, plots, mood) => {
         }
     }
 }
+//////////////////////////////////
 
+////////////////////// Grabs movies by genre
 const manyRandomMovies = (yourMood) => {
     let arrayOfMovieArrays = [];
     let allMovies = [];
@@ -149,8 +163,12 @@ const manyRandomMovies = (yourMood) => {
         })
     }
 }
+////////////////////
 
+
+/////////////////////// Mood selection
 $('.moodButtons').click(function () {
+    $('#carouselContainer').hide()
     $('#soloMovie').hide()
     movieList = [];
     moodWord = $(this).attr('mood')
@@ -158,8 +176,7 @@ $('.moodButtons').click(function () {
     let yourMood = moodObjectArray[moodIndex]
     console.log(yourMood)
     manyRandomMovies(yourMood);
-
     $('.cover-heading').hide()
     $('.mastheadAfterMood').show()
-
 })
+

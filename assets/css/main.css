@@ -137,6 +137,11 @@ button:hover {
     overflow-wrap: normal;
 }
 
+  #carouselContainer {
+      max-width: 640px;
+  }
+
 .card-body {
     padding: 0px !important;
 }
+
