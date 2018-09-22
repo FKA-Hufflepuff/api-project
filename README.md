@@ -11,8 +11,7 @@ We set out to build a simple app to suggest movies based on your mood. No more d
 
 Help us make it better. 
 
-  - Facial recognition: 
-  - take a selfie and get back movies 
+  - Facial recognition: take a selfie and get back movies 
   - Voice recognition: 
 
 
@@ -24,4 +23,5 @@ Nathan Golba, Haley Hartman, Stephen Simcko, Dana Shelton
 
 APIs: 
 www.themoviedb.org 
+
 YouTube: iFrame Player API 
