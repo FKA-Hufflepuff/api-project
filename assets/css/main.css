@@ -123,3 +123,13 @@ button:hover .middle {
 .carousel-caption {
     -webkit-text-stroke: 1px black;
   }
+
+  #carouselContainer {
+      max-width: 640px;
+  }
+
+  .card {
+      /* max-width: 250px;
+      min-width: 150px; */
+      color: black;
+  }

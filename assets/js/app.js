@@ -48,16 +48,9 @@ const carouselFiller = (index, movieList) => {
     $(`#slide${index}`).siblings().removeClass('active');
     $(`#carouselIndicator${index}`).addClass('active');
     $(`#carouselIndicator${index}`).siblings().removeClass('active')
-
-    for (let i = 0; i < 6; i++)  {
-        $(`#caption${i}`).empty().append(`<h3>${movieTitles[i]}</h3> <h5>${movieList[i].release_date}</h5>`)
-    }
-
     if (carouselLoaded === false) {
         $('#carouselContainer').show();
-        $('.carousel').carousel({
-            interval: 0
-        })
+        $('.carousel').carousel('pause')
         for (let i = 0; i < 6; i++) {
             const onPlayerReady = (event) => {
                 $('#videoCarousel').on('slide.bs.carousel', () => {
@@ -100,17 +93,19 @@ const cardGenerator = (movieList) => {
         let card = $(`<div class="card" id="card${cardIndex}">`)
         let cardTop = $(`<div id="moodMovie${cardIndex}">` + `<img class="card-img-top" src="http://image.tmdb.org/t/p/w185/${movieList[cardIndex].poster_path}">`)
         let cardBody = $(`<div class="card-body">`)
-        let cardTitle = $(`<h2 class="card-title text">${movieList[cardIndex].title}</h2>`)
+        let cardTitle = $(`<h5 class="card-text card-title">${movieList[cardIndex].title}</h5><p>${movieList[cardIndex].release_date.substring(0, 4)}</p>`)
         cardBody.append(cardTitle)
         $('#movieCards1').append(card)
+        if (cardIndex === 3) {
+            $('#card3').addClass('d-md-block')
+        }
         $(`#card${cardIndex}`).append(cardTop, cardBody)
         $(`#card${cardIndex}`).click((event) => {
             $('.card-img-top').slideUp(300)
-            // playerGenerator(cardIndex, movieList)
+            $('#carouselContainer').show();
             carouselFiller(cardIndex, movieList);
         })
     }
-
 }
 
 const checkPlots = (allMovies, plots, mood) => {
@@ -150,6 +145,7 @@ const manyRandomMovies = (yourMood) => {
 }
 
 $('.moodButtons').click(function () {
+    $('#carouselContainer').hide()
     $('#soloMovie').hide()
     movieList = [];
     moodWord = $(this).attr('mood')
