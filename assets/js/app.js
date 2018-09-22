@@ -16,11 +16,6 @@ let players = [player0, player1, player2, player3, player4, player5]
 let youtubeAPIReady = false;
 let moodWord = '';
 $('.mastheadAfterMood').hide()
-function onYouTubeIframeAPIReady() {
-    youtubeAPIReady = true;
-}
-
-
 
 //////////////// Mood Profile Construction 
 function MoodProfile(moodEnglish, moodIndex, genreIds, plotWords) {
