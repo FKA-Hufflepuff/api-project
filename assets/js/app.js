@@ -15,6 +15,11 @@ let player5 = {};
 let players = [player0, player1, player2, player3, player4, player5]
 let youtubeAPIReady = false;
 let moodWord = '';
+$('.mastheadAfterMood').hide()
+function onYouTubeIframeAPIReady() {
+    youtubeAPIReady = true;
+}
+
 
 
 //////////////// Mood Profile Construction 
@@ -100,11 +105,11 @@ const cardGenerator = (movieList) => {
     $('#cardsGoHere').empty();
     $('#cardsGoHere').append('<div class="container" id="cardContainer">')
     $('#cardContainer').append('<div class="card-deck" id="movieCards1">')
-    for (let cardIndex = 0; cardIndex < movieList.length; cardIndex++) {
-        let card = $(`<div class="card" id="card${cardIndex}">`)
+    for (let cardIndex = 0; cardIndex < movieList.length; cardIndex++) {        let card = $(`<div class="card" id="card${cardIndex}">`)
         let cardTop = $(`<div id="moodMovie${cardIndex}">` + `<img class="card-img-top" src="http://image.tmdb.org/t/p/w185/${movieList[cardIndex].poster_path}">`)
         let cardBody = $(`<div class="card-body">`)
-        let cardTitle = $(`<h5 class="card-text card-title">${movieList[cardIndex].title}</h5><p>${movieList[cardIndex].release_date.substring(0, 4)}</p>`)
+        let cardTitle = $(`<h5 class="card-text">${movieList[cardIndex].title}</h5><p class="card-text">${movieList[cardIndex].release_date.substring(0, 4)}</p>`)
+
         cardBody.append(cardTitle)
         $('#movieCards1').append(card)
         if (cardIndex === 3) {
@@ -171,5 +176,7 @@ $('.moodButtons').click(function () {
     let yourMood = moodObjectArray[moodIndex]
     console.log(yourMood)
     manyRandomMovies(yourMood);
+    $('.cover-heading').hide()
+    $('.mastheadAfterMood').show()
 })
-/////////////////////////
+
