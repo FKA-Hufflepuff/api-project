@@ -65,7 +65,7 @@ const carouselFiller = (index, movieList) => {
                 })
                 event.target.cuePlaylist({
                     listType: 'search',
-                    list: movieTitles[i] + ' trailer'
+                    list: movieTitles[i] + 'movie trailer'
                 })
             }
             players[i] = new YT.Player(`moodMovie${i}`, {
