@@ -3,6 +3,7 @@ $(document).ready(() => {
     $('.mastheadAfterMood').hide()
 })
 const tmdbAPIkey = 'c20ca68e2a577a2aebe1461e51d16a32';
+const omdbAPIkey = '8a053050'
 let moodIndex = 0;
 let yourMood = {};
 let movieList = [];
@@ -93,25 +94,43 @@ const carouselFiller = (index, movieList) => {
 }
 ////////////////////////
 
+//////////////////////// Get IMDB IDs
+
+const imdbIdGetter = (movieList) => {
+    let imdbUrl = '';
+    for (let i = 0; i < movieList.length; i++) {
+        imdbUrl = `http://omdbapi.com/?apikey=${omdbAPIkey}&t=${movieList[i].title}`
+        $.get(imdbUrl).then((response) => {
+            if (response.Response === 'True') {
+                $(`#card${i}`).append(`<a href="https://www.imdb.com/title/${response.imdbID}" target="_blank" class="btn btn-warning imdbBtn">IMDb</a>`)
+            }
+        })
+    }
+}
+
+////////////////////////
+
+
 ///////////////////// Creates movie cards
+
 const cardGenerator = (movieList) => {
     $('#cardsGoHere').empty();
     $('#cardsGoHere').append('<div class="container" id="cardContainer">')
-    $('#cardContainer').append('<div class="card-deck" id="movieCards1">')
+    $('#cardContainer').append('<div class="row" id="movieCards1">')
     for (let cardIndex = 0; cardIndex < movieList.length; cardIndex++) {
-        let card = $(`<div class="card" id="card${cardIndex}">`)
-        let cardTop = $(`<div id="moodMovie${cardIndex}">` + `<img class="card-img-top" src="http://image.tmdb.org/t/p/w185/${movieList[cardIndex].poster_path}">`)
-        let cardBody = $(`<div class="card-body">`)
-        let cardTitle = $(`<h5 class="card-text">${movieList[cardIndex].title}</h5><p class="card-text">${movieList[cardIndex].release_date.substring(0, 4)}</p>`)
-        cardBody.append(cardTitle)
-        $('#movieCards1').append(card)
-        $(`#card${cardIndex}`).append(cardTop, cardBody)
-        $(`#card${cardIndex}`).click( () => {
-            $('.card-img-top').hide()
+        let movieObject = $(`<div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 mx-auto" id="card${cardIndex}">`)
+        let poster = $(`<div id="moodMovie${cardIndex}">` + `<img class="moviePoster img-thumbnail img-fluid" src="http://image.tmdb.org/t/p/w185/${movieList[cardIndex].poster_path}">`)
+        let movieInfo = $(`<h5>${movieList[cardIndex].title}</h5>`)
+        let trailerBtn = $(`<div id="btnGroup${cardIndex}" class="btn-group" role="group"><button type="button" class="btn btn-secondary"><i class="fa fa-film" aria-hidden="true"></i></button></div>`)
+        $('#movieCards1').append(movieObject)
+        $(`#card${cardIndex}`).append(poster, movieInfo, trailerBtn)
+        $(`#btnGroup${cardIndex}`).click(() => {
+            $('.moviePoster').hide()
             $('#carouselContainer').show();
             carouselFiller(cardIndex, movieList);
         })
     }
+    imdbIdGetter(movieList);
 }
 /////////////////////////
 
@@ -143,8 +162,8 @@ const manyRandomMovies = (yourMood) => {
             arrayOfMovieArrays.push(response.results)
             if (arrayOfMovieArrays.length === 40) {
                 allMovies = _.flatten(arrayOfMovieArrays);
-             ////// Skips plots for random button ////////
-                if (!yourMood.plotWords) {             
+                ////// Skips plots for random button ////////
+                if (!yourMood.plotWords) {
                     movieList = _.sample(_.uniq(allMovies), 6);
                     cardGenerator(movieList);
                 } else {
