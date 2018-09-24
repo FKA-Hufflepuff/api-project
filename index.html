@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+        crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/main.css" rel="stylesheet">
+    <title>#mood</title>
+    <link rel="icon" href="https://cdn.shopify.com/s/files/1/1061/1924/files/Tongue_Out_Emoji_with_Winking_Eye.png?9898922749706957214" type="image/gif" sizes="16x16">
+
+</head>
+
+
+<body id="top">
+    <div class="site-wrapper">
+        <div class="site-wrapper-inner">
+            <div class="cover-container container">
+                <div class="masthead row">
+                    <div class="inner col-12">
+                        <h3 class="masthead-brand">#Mood</h3>
+                        <div class="mastheadAfterMood">
+                            <h3>How are you feeling?</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="inner cover">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1 class="cover-heading text-center">How are you feeling?</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="buttonContainer container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="happy">
+                            <img class="img-responsive" src="https://cdn.shopify.com/s/files/1/1061/1924/files/Smiling_Emoji_with_Eyes_Opened.png?9898922749706957214">
+                        </button>
+
+                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="sad">
+                            <img class="img-responsive" src="https://cdn.shopify.com/s/files/1/1061/1924/files/Crying_Face_Emoji.png?9898922749706957214">
+                        </button>
+
+                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="mad">
+                            <img class="img-responsive" src="https://cdn.shopify.com/s/files/1/1061/1924/files/Very_Angry_Emoji.png?9898922749706957214">
+                        </button>
+
+                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="lonely">
+                            <img class="img-responsive" src="https://cdn.shopify.com/s/files/1/1061/1924/files/Confused_Face_Emoji.png?9898922749706957214">
+                        </button>
+
+                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="inLove">
+                            <img class="img-responsive" src="https://cdn.shopify.com/s/files/1/1061/1924/files/Heart_Eyes_Emoji.png?9898922749706957214">
+                        </button>
+
+                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="silly">
+                            <img class="img-responsive" src="https://cdn.shopify.com/s/files/1/1061/1924/files/Tongue_Out_Emoji_with_Winking_Eye.png?9898922749706957214">
+                        </button>
+
+                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="random">
+                            <img class="img-responsive" src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/129/game-die_1f3b2.png">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class='container  my-2' id="carouselContainer" style="display:none">
+        <div id="videoCarousel" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#videoCarousel" id="carouselIndicator0" data-slide-to="0"></li>
+                <li data-target="#videoCarousel" id="carouselIndicator1" data-slide-to="1"></li>
+                <li data-target="#videoCarousel" id="carouselIndicator2" data-slide-to="2"></li>
+                <li data-target="#videoCarousel" id="carouselIndicator3" data-slide-to="3"></li>
+                <li data-target="#videoCarousel" id="carouselIndicator4" data-slide-to="4"></li>
+                <li data-target="#videoCarousel" id="carouselIndicator5" data-slide-to="5"></li>
+            </ol>
+            <div class="carousel-inner" role="listbox">
+                <div class="carousel-item" id="slide0">
+                    <div class='carouselContent embed-responsive embed-responsive-16by9' alt="First slide">
+                        <div class="videoSlot" id="moodMovie0"></div>
+                    </div>
+                </div>
+
+                <div class="carousel-item" id="slide1">
+                    <div class='carouselContent embed-responsive embed-responsive-16by9' alt="Second slide">
+                        <div class="videoSlot" id="moodMovie1"></div>
+                    </div>
+                </div>
+                <div class="carousel-item" id="slide2">
+                    <div class='carouselContent embed-responsive embed-responsive-16by9' alt="Third slide">
+                        <div class="videoSlot" id="moodMovie2"></div>
+                    </div>
+                </div>
+                <div class="carousel-item" id="slide3">
+                    <div class='carouselContent embed-responsive embed-responsive-16by9' alt="Fourth slide">
+                        <div class="videoSlot" id="moodMovie3"></div>
+                    </div>
+                </div>
+                <div class="carousel-item" id="slide4">
+                    <div class='carouselContent embed-responsive embed-responsive-16by9' alt="Fifth slide">
+                        <div class="videoSlot" id="moodMovie4"></div>
+                    </div>
+                </div>
+                <div class="carousel-item" id="slide5">
+                    <div class='carouselContent embed-responsive embed-responsive-16by9' alt="Sixth slide">
+                        <div class="videoSlot" id="moodMovie5"></div>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#videoCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#videoCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+
+    <div id="cardsGoHere"></div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="assets/js/underscore-min.js"></script>
+    <script type="text/javascript" src="assets/js/app.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>
