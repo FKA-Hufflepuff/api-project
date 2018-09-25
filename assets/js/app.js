@@ -105,7 +105,7 @@ const cardGenerator = (movieList) => {
     $('#cardContainer').append('<div class="row" id="movieCards1">')
     for (let cardIndex = 0; cardIndex < movieList.length; cardIndex++) {
         let movieObject = $(`<div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 mx-auto my-2" id="card${cardIndex}">`)
-        let poster = $(`<div id="moodMovie${cardIndex}">` + `<img class="moviePoster img-thumbnail img-fluid" src="http://image.tmdb.org/t/p/w185/${movieList[cardIndex].poster_path}">`)
+        let poster = $(`<div id="moodMovie${cardIndex}">` + `<img class="moviePoster img-thumbnail img-fluid" src="https://image.tmdb.org/t/p/w185/${movieList[cardIndex].poster_path}">`)
         let movieInfo = $(`<h5>${movieList[cardIndex].title}</h5>`)
         let trailerBtn = $(`<div id="btnGroup${cardIndex}" class="btn-group" role="group"><button type="button" class="btn btn-secondary"><i class="fa fa-film" aria-hidden="true"></i></button></div>`)
         $('#movieCards1').append(movieObject)
