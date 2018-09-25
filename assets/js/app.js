@@ -50,6 +50,9 @@ const carouselFiller = (index, movieList) => {
                 $('#videoCarousel').on('slide.bs.carousel', () => {
                     event.target.pauseVideo()
                 })
+                $('.moodButtons').click(() => {
+                    event.target.pauseVideo()
+                })
                 event.target.cuePlaylist({
                     listType: 'search',
                     list: movieTitles[i] + 'movie trailer'
