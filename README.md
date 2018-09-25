@@ -4,7 +4,7 @@ Group Project for CWRU combinging a few API's to generate movie suggestions and 
 
 **Motivation**
 
-We set out to build a simple app to suggest movies based on your mood. No more decisions to make, just choose an emoji and voila! You have 5 movies perfect for how you feel. We also wanted it to be random, giving you different movies everytime you interacted with the app.
+We set out to build a simple app to suggest movies based on your mood. No more decisions to make, just choose an emoji and voila! You have 6 movies perfect for how you feel. We also wanted it to be random, giving you different movies everytime you interacted with the app.
 
 
 **Future Features** 
@@ -24,5 +24,7 @@ Nathan Golba, Hayley Hartman, Stephen Simko, Dana Shelton, and Will Bursch
 APIs: 
 
 The Movie Database: www.themoviedb.org 
+
+The Open Movie Database: www.omdbapi.com
 
 YouTube iFrame PLayer: https://developers.google.com/youtube/iframe_api_reference?
