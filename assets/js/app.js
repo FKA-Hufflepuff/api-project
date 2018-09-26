@@ -88,7 +88,7 @@ const carouselFiller = (index, movieList) => {
 const imdbIdGetter = (movieList) => {
     let imdbUrl = '';
     for (let i = 0; i < movieList.length; i++) {
-        imdbUrl = `http://omdbapi.com/?apikey=${omdbAPIkey}&t=${movieList[i].title}`
+        imdbUrl = `https://omdbapi.com/?apikey=${omdbAPIkey}&t=${movieList[i].title}`
         $.get(imdbUrl).then((response) => {
             if (response.Response === 'True') {
                 $(`#card${i}`).append(`<a href="https://www.imdb.com/title/${response.imdbID}" target="_blank" class="btn btn-warning imdbBtn">IMDb</a>`)
