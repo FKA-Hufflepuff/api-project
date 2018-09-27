@@ -94,6 +94,7 @@ button img {
     height: auto;
     width: 6vw;
     min-width: 60px;
+    min-height: 60px;
 }
 
 button:hover {
@@ -102,6 +103,7 @@ button:hover {
 
 
 .mastheadAfterMood {
+    display: none;
     float: right;
     margin-top: 10px;
     margin-bottom: 10px;
