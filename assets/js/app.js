@@ -1,31 +1,130 @@
-const tmdbAPIkey = 'c20ca68e2a577a2aebe1461e51d16a32';
-const omdbAPIkey = '8a053050'
-let moodIndex = 0;
-let yourMood = {};
-let movieList = [];
-let movieTitles = [];
-let carouselLoaded = false;
-let players = [{}, {}, {}, {}, {}, {}]
-let allGenres = [28, 12, 16, 35, 80, 99, 18, 10751, 14, 36, 27, 10402, 9648, 10749, 878, 10770, 53, 10752, 37]
-let moodWord = '';
+const mainModule = (() => {
+    const _tmdbAPIkey = 'c20ca68e2a577a2aebe1461e51d16a32'
+    const _omdbAPIkey = '8a053050'
+    const _allGenres = [28, 12, 16, 35, 80, 99, 18, 10751, 14, 36, 27, 10402, 9648, 10749, 878, 10770, 53, 10752, 37]
+    const _moods = {
+        _happy: {
+            genres: [16, 35, 10751],
+            terms: ['friends', 'family', 'celebration', 'comedy', 'funny']
+        },
+        _sad: {
+            genres: [18, 9648, 10749],
+            terms: ['dark', 'tragic', 'lonely', 'loss', 'death', 'dying', 'dead', 'cry']
+        },
+        _mad: {
+            genres: [28, 53, 10752],
+            terms: ['cruel', 'angry', 'ruin', 'anger', 'mad', 'madness', 'violence', 'fight']
+        },
+        _lonely: {
+            genres: [99, 878, 10749],
+            terms: ['dystopian', 'heartbroken', 'personal', 'lonely', 'loss', 'heartbreak', 'seperation', 'break-up', 'abandon', 'alone', 'love']
+        },
+        _inLove: {
+            genres: [12, 35, 10749],
+            terms: ['magical', 'charming', 'love', 'romance', 'romantic', 'wedding', 'marriage', 'boyfriend', 'girlfriend']
+        },
+        _silly: {
+            genres: [35, 14, 10402],
+            terms: ['exciting', 'outrageous', 'laughter', 'satire', 'comedy', 'wild', 'high jinks', 'mockumentary', 'funny', 'laughter', 'party', 'scheme']
+        },
+        _random: {
+            genres: _.sample(_allGenres, 3),
+            terms: null
+        }
+    }
+    let _moodSelected = {}
+    let _carouselLoaded = false
+    let _movieList = []
+    let _applicableMovies = []
+    let _rateLimit = 40
+    let _queryUrl = ''
+    let _page = 1
 
-//////////////// Mood Profile Construction 
-function MoodProfile(moodEnglish, moodIndex, genreIds, plotWords) {
-    this.english = moodEnglish;
-    this.index = moodIndex;
-    this.genres = genreIds;
-    this.plotWords = plotWords;
-}
-const happy = new MoodProfile('happy', 0, [16, 35, 10751], ['friends', 'family', 'celebration', 'comedy', 'funny'])
-const sad = new MoodProfile('sad', 1, [18, 9648, 10749], ['dark', 'tragic', 'lonely', 'loss', 'death', 'dying', 'dead', 'cry'])
-const mad = new MoodProfile('mad', 2, [28, 53, 10752], ['cruel', 'angry', 'ruin', 'anger', 'mad', 'madness', 'violence', 'fight'])
-const lonely = new MoodProfile('lonely', 3, [99, 878, 10749], ['dystopian', 'heartbroken', 'personal', 'lonely', 'loss', 'heartbreak', 'seperation', 'break-up', 'abandon', 'alone', 'love'])
-const inLove = new MoodProfile('inLove', 4, [12, 35, 10749], ['magical', 'charming', 'love', 'romance', 'romantic', 'wedding', 'marriage', 'boyfriend', 'girlfriend'])
-const silly = new MoodProfile('silly', 5, [35, 14, 10402], ['exciting', 'outrageous', 'laughter', 'satire', 'comedy', 'wild', 'high jinks', 'mockumentary', 'funny', 'laughter', 'party', 'scheme'])
-const random = new MoodProfile('random', 6, _.sample(allGenres, 3), null)
 
-const moodObjectArray = [happy, sad, mad, lonely, inLove, silly, random]
-const moodStringArray = moodObjectArray.map(x => x.english)
+    const resetPage = () => {}
+
+    const _setMood = input => {
+        _moodSelected = _moods[input]
+        return _moodSelected
+    }
+    const setMood = input => _setMood(input)
+
+    const ajaxCall = queryUrl => {
+        $.ajax({
+                type: 'GET',
+                url: queryUrl
+            })
+            .done((data, textStatus, jqXHR) => {
+                _movieList = [..._movieList, ...data.results]
+                _page++;
+                _rateLimit = jqXHR.getResponseHeader('X-RateLimit-Remaining')
+                grabMovies()
+            })
+    }
+
+    const _processMovies = () => {
+        if (!_moodSelected.terms) {
+            console.time('Sample Test')
+            _movieList = _.sample(_.uniq(_movieList), 6)
+            console.timeEnd('Sample Test')
+        }else {
+            console.log(_movieList)
+            console.log(_moodSelected.terms)
+            console.time('Map test')
+            console.log(_movieList.map(x => x.overview.split(' ')).map(x => x.filter((e, i, a) => _moodSelected.terms.indexOf(e) != -1)).filter((x, i, a) => {if (a[i].length) {_applicableMovies.push(_movieList[i]); return _applicableMovies}}))
+            console.timeEnd('Map test')
+            console.log(_applicableMovies)
+            // .map((x, i, a) => (x.length) ? _movieList[i] : ))
+            // .map(x => [].filter((a, b) => {})))
+        }
+    }
+
+
+    // if (!yourMood.plotWords) {
+    //     movieList = _.sample(_.uniq(allMovies), 6);
+    //     cardGenerator(movieList);
+    // } else {
+    //     let allPlots = _.pluck(allMovies, 'overview');
+    //     checkPlots(allMovies, allPlots, yourMood);
+    // }
+
+    const grabMovies = () => {
+        _queryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${_moodSelected.genres[0]}|${_moodSelected.genres[1]}|${_moodSelected.genres[2]}&page=${_page}&include_adult=false&language=en-US&api_key=${_tmdbAPIkey}`;
+        (_page >= 40 || _rateLimit < 1) ? _processMovies () : ajaxCall(_queryUrl)
+    }
+
+
+    return {
+        resetPage,
+        setMood,
+        grabMovies
+    }
+})()
+
+const {
+    resetPage,
+    setMood,
+    grabMovies
+} = mainModule;
+
+
+
+// const tmdbAPIkey = 'c20ca68e2a577a2aebe1461e51d16a32';
+// const omdbAPIkey = '8a053050'
+// let moodIndex = 0;
+// let yourMood = {};
+// let movieList = [];
+// let movieTitles = [];
+// let carouselLoaded = false;
+// let players = [{}, {}, {}, {}, {}, {}]
+// let allGenres = [28, 12, 16, 35, 80, 99, 18, 10751, 14, 36, 27, 10402, 9648, 10749, 878, 10770, 53, 10752, 37]
+// let moodWord = '';
+
+
+
+
+// const moodObjectArray = [happy, sad, mad, lonely, inLove, silly, random]
+// const moodStringArray = moodObjectArray.map(x => x.english)
 ///////////////////////////////////////
 
 ///////////// Load iFrame API Asynchronously 
@@ -160,15 +259,18 @@ const manyRandomMovies = (yourMood) => {
 }
 ////////////////////
 
+
+
 /////////////////////// Mood selection
 $('.moodButtons').click(function () {
-    $('#carouselContainer').hide()
-    $('#soloMovie').hide()
-    movieList = [];
-    moodWord = $(this).attr('mood')
-    moodIndex = moodStringArray.indexOf(moodWord);
-    let yourMood = moodObjectArray[moodIndex]
-    manyRandomMovies(yourMood);
-    $('.cover-heading').hide()
-    $('.mastheadAfterMood').show()
+
+    // reset stuff
+    // $('#carouselContainer').hide()
+    // movieList = [];
+    // $('.cover-heading').hide()
+    // $('.mastheadAfterMood').show()
+    //
+    setMood($(this).attr('mood'))
+    grabMovies()
+    // manyRandomMovies(yourMood);
 })
