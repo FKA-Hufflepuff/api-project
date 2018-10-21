@@ -99,26 +99,6 @@ const {
     grabMovies
 } = mainModule;
 
-
-
-// const tmdbAPIkey = 'c20ca68e2a577a2aebe1461e51d16a32';
-// const omdbAPIkey = '8a053050'
-// let moodIndex = 0;
-// let yourMood = {};
-// let movieList = [];
-// let movieTitles = [];
-// let carouselLoaded = false;
-// let players = [{}, {}, {}, {}, {}, {}]
-// let allGenres = [28, 12, 16, 35, 80, 99, 18, 10751, 14, 36, 27, 10402, 9648, 10749, 878, 10770, 53, 10752, 37]
-// let moodWord = '';
-
-
-
-
-// const moodObjectArray = [happy, sad, mad, lonely, inLove, silly, random]
-// const moodStringArray = moodObjectArray.map(x => x.english)
-///////////////////////////////////////
-
 ///////////// Load iFrame API Asynchronously 
 let tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
