@@ -35,6 +35,7 @@ const mainModule = (() => {
     let _moodSelected = {}
     let _carouselLoaded = false
     let _movieList = []
+    let _plots = []
     let _applicableMovies = []
     let _rateLimit = 40
     let _queryUrl = ''
@@ -49,7 +50,7 @@ const mainModule = (() => {
     }
     const setMood = input => _setMood(input)
 
-    const ajaxCall = queryUrl => {
+    const _ajaxCall = queryUrl => {
         $.ajax({
                 type: 'GET',
                 url: queryUrl
@@ -64,33 +65,24 @@ const mainModule = (() => {
 
     const _processMovies = () => {
         if (!_moodSelected.terms) {
-            console.time('Sample Test')
             _movieList = _.sample(_.uniq(_movieList), 6)
-            console.timeEnd('Sample Test')
         }else {
-            console.log(_movieList)
-            console.log(_moodSelected.terms)
-            console.time('Map test')
-            console.log(_movieList.map(x => x.overview.split(' ')).map(x => x.filter((e, i, a) => _moodSelected.terms.indexOf(e) != -1)).filter((x, i, a) => {if (a[i].length) {_applicableMovies.push(_movieList[i]); return _applicableMovies}}))
-            console.timeEnd('Map test')
-            console.log(_applicableMovies)
-            // .map((x, i, a) => (x.length) ? _movieList[i] : ))
-            // .map(x => [].filter((a, b) => {})))
+            _plots = _movieList.map(x => x.overview)
+            for (let plotIndex = 0; plotIndex < _plots.length; plotIndex++) {
+                for (let wordIndex = 0; wordIndex < _moodSelected.terms.length; wordIndex++) {
+                    if (_plots[plotIndex].includes(_moodSelected.terms[wordIndex])) {
+                        _applicableMovies.push(_movieList[plotIndex])
+                    }
+                }
+            }
+            _movieList = _.sample(_.uniq(_applicableMovies), 6)
         }
     }
 
-
-    // if (!yourMood.plotWords) {
-    //     movieList = _.sample(_.uniq(allMovies), 6);
-    //     cardGenerator(movieList);
-    // } else {
-    //     let allPlots = _.pluck(allMovies, 'overview');
-    //     checkPlots(allMovies, allPlots, yourMood);
-    // }
-
     const grabMovies = () => {
         _queryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${_moodSelected.genres[0]}|${_moodSelected.genres[1]}|${_moodSelected.genres[2]}&page=${_page}&include_adult=false&language=en-US&api_key=${_tmdbAPIkey}`;
-        (_page >= 40 || _rateLimit < 1) ? _processMovies () : ajaxCall(_queryUrl)
+        (_page >= 40 || _rateLimit < 1) ? _processMovies () : _ajaxCall(_queryUrl)
+        
     }
 
 
@@ -219,48 +211,6 @@ const cardGenerator = (movieList) => {
 }
 /////////////////////////
 
-//////////////////// Check plots for keywords 
-const checkPlots = (allMovies, plots, mood) => {
-    let allApplicableMovies = []
-    for (let plotIndex = 0; plotIndex < plots.length; plotIndex++) {
-        for (let wordIndex = 0; wordIndex < mood.plotWords.length; wordIndex++) {
-            if (plots[plotIndex].includes(mood.plotWords[wordIndex])) {
-                allApplicableMovies.push(allMovies[plotIndex])
-            }
-        }
-        if (plotIndex === plots.length - 1) {
-            movieList = _.sample(_.uniq(allApplicableMovies), 6)
-            cardGenerator(movieList);
-        }
-    }
-}
-//////////////////////////////////
-
-////////////////////// Grabs movies by genre
-const manyRandomMovies = (yourMood) => {
-    let arrayOfMovieArrays = [];
-    for (let page = 1; page <= 40; page++) {
-        let moodQueryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${yourMood.genres[0]}|${yourMood.genres[1]}|${yourMood.genres[2]}&page=${page}&include_adult=false&language=en-US&api_key=${tmdbAPIkey}`;
-        $.get(moodQueryUrl).then((response) => {
-            arrayOfMovieArrays.push(response.results)
-            if (arrayOfMovieArrays.length === 40) {
-                let allMovies = _.flatten(arrayOfMovieArrays);
-                ////// Skips plots for random button ////////
-                if (!yourMood.plotWords) {
-                    movieList = _.sample(_.uniq(allMovies), 6);
-                    cardGenerator(movieList);
-                } else {
-                    let allPlots = _.pluck(allMovies, 'overview');
-                    checkPlots(allMovies, allPlots, yourMood);
-                }
-            }
-        })
-    }
-}
-////////////////////
-
-
-
 /////////////////////// Mood selection
 $('.moodButtons').click(function () {
 
@@ -274,3 +224,16 @@ $('.moodButtons').click(function () {
     grabMovies()
     // manyRandomMovies(yourMood);
 })
+
+
+
+
+
+
+
+
+
+
+
+/////////////Box of Shame //////////////////
+            // _movieList.map(x => x.overview.split(' ')).map(x => x.filter((e, i, a) => _moodSelected.terms.indexOf(e) != -1)).filter((x, i, a) => {if (a[i].length) {_applicableMovies.push(_movieList[i]); return _applicableMovies}})
