@@ -5,31 +5,38 @@ const mainModule = (() => {
     const _moods = {
         _happy: {
             genres: [16, 35, 10751],
-            terms: ['friends', 'family', 'celebration', 'comedy', 'funny']
+            terms: ['friends', 'family', 'celebration', 'comedy', 'funny'],
+            movieList: []
         },
         _sad: {
             genres: [18, 9648, 10749],
-            terms: ['dark', 'tragic', 'lonely', 'loss', 'death', 'dying', 'dead', 'cry']
+            terms: ['dark', 'tragic', 'lonely', 'loss', 'death', 'dying', 'dead', 'cry'],
+            movieList: []
         },
         _mad: {
             genres: [28, 53, 10752],
-            terms: ['cruel', 'angry', 'ruin', 'anger', 'mad', 'madness', 'violence', 'fight']
+            terms: ['cruel', 'angry', 'ruin', 'anger', 'mad', 'madness', 'violence', 'fight'],
+            movieList: []
         },
         _lonely: {
             genres: [99, 878, 10749],
-            terms: ['dystopian', 'heartbroken', 'personal', 'lonely', 'loss', 'heartbreak', 'seperation', 'break-up', 'abandon', 'alone', 'love']
+            terms: ['dystopian', 'heartbroken', 'personal', 'lonely', 'loss', 'heartbreak', 'seperation', 'break-up', 'abandon', 'alone', 'love'],
+            movieList: []
         },
         _inLove: {
             genres: [12, 35, 10749],
-            terms: ['magical', 'charming', 'love', 'romance', 'romantic', 'wedding', 'marriage', 'boyfriend', 'girlfriend']
+            terms: ['magical', 'charming', 'love', 'romance', 'romantic', 'wedding', 'marriage', 'boyfriend', 'girlfriend'],
+            movieList: []
         },
         _silly: {
             genres: [35, 14, 10402],
-            terms: ['exciting', 'outrageous', 'laughter', 'satire', 'comedy', 'wild', 'high jinks', 'mockumentary', 'funny', 'laughter', 'party', 'scheme']
+            terms: ['exciting', 'outrageous', 'laughter', 'satire', 'comedy', 'wild', 'high jinks', 'mockumentary', 'funny', 'laughter', 'party', 'scheme'],
+            movieList: []
         },
         _random: {
             genres: _.sample(_allGenres, 3),
-            terms: null
+            terms: null,
+            movieList: []
         }
     }
     let _moodSelected = {}
@@ -46,9 +53,11 @@ const mainModule = (() => {
 
     const _setMood = input => {
         _moodSelected = _moods[input]
-        return _moodSelected
+        // return _moodSelected
     }
     const setMood = input => _setMood(input)
+
+    const getMood = () => _moodSelected;
 
     const _ajaxCall = queryUrl => {
         $.ajax({
@@ -56,7 +65,7 @@ const mainModule = (() => {
                 url: queryUrl
             })
             .done((data, textStatus, jqXHR) => {
-                _movieList = [..._movieList, ...data.results]
+                _movieList = _movieList.concat(data.results)
                 _page++;
                 _rateLimit = jqXHR.getResponseHeader('X-RateLimit-Remaining')
                 grabMovies()
@@ -64,20 +73,31 @@ const mainModule = (() => {
     }
 
     const _processMovies = () => {
-        if (!_moodSelected.terms) {
+        if (!_moodSelected.terms || _moodSelected.movieList.length) {
             _movieList = _.sample(_.uniq(_movieList), 6)
         }else {
-            _plots = _movieList.map(x => x.overview)
-            for (let plotIndex = 0; plotIndex < _plots.length; plotIndex++) {
-                for (let wordIndex = 0; wordIndex < _moodSelected.terms.length; wordIndex++) {
-                    if (_plots[plotIndex].includes(_moodSelected.terms[wordIndex])) {
-                        _applicableMovies.push(_movieList[plotIndex])
-                    }
-                }
-            }
-            _movieList = _.sample(_.uniq(_applicableMovies), 6)
+            console.log(_movieList)
+            _applicableMovies = _movieList.filter((x, i, a) => x.overview.toLowerCase().split(' ').some((word) => _moodSelected.terms.includes(word)))
+            console.log(_applicableMovies)
+
         }
+        // console.log(_movieList)
+        //     _plots = _movieList.map(x => x.overview)
+        //     for (let plotIndex = 0; plotIndex < _plots.length; plotIndex++) {
+        //         for (let wordIndex = 0; wordIndex < _moodSelected.terms.length; wordIndex++) {
+        //             if (_plots[plotIndex].includes(_moodSelected.terms[wordIndex])) {
+        //                 _applicableMovies.push(_movieList[plotIndex])
+        //             }
+        //         }
+        //     }
+        //     // console.log(_movieList.filter((x, i, a) => {_moodSelected.terms.map((term) => x.overview.toLowerCase().includes(term))}))
+        //     _movieList = _.sample(_.uniq(_applicableMovies), 6)
+        // }
+        console.log(_applicableMovies)
+        console.log(_.uniq(_applicableMovies))
     }
+
+    const processMovies = () => _processMovies()
 
     const grabMovies = () => {
         _queryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${_moodSelected.genres[0]}|${_moodSelected.genres[1]}|${_moodSelected.genres[2]}&page=${_page}&include_adult=false&language=en-US&api_key=${_tmdbAPIkey}`;
@@ -85,10 +105,11 @@ const mainModule = (() => {
         
     }
 
-
     return {
         resetPage,
         setMood,
+        getMood,
+        processMovies,
         grabMovies
     }
 })()
@@ -96,7 +117,9 @@ const mainModule = (() => {
 const {
     resetPage,
     setMood,
-    grabMovies
+    getMood,
+    grabMovies,
+    processMovies
 } = mainModule;
 
 ///////////// Load iFrame API Asynchronously 
@@ -201,7 +224,9 @@ $('.moodButtons').click(function () {
     // $('.mastheadAfterMood').show()
     //
     setMood($(this).attr('mood'))
-    grabMovies()
+    let chosenMood = getMood();
+    console.log(chosenMood)
+    chosenMood.movieList.length ? processMovies() : grabMovies()
     // manyRandomMovies(yourMood);
 })
 
