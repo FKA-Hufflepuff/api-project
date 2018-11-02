@@ -5,7 +5,7 @@ const mainModule = (() => {
     const _moods = {
         _happy: {
             genres: [16, 35, 10751],
-            terms: ['friends', 'family', 'celebration', 'comedy', 'funny'],
+            terms: ['friend', 'friends', 'family', 'celebration', 'comedy', 'funny'],
             movieList: []
         },
         _sad: {
@@ -72,36 +72,70 @@ const mainModule = (() => {
             })
     }
 
+
+    const _speedTest = () => {
+        return new Promise((resolve, reject) => {
+            console.time('sort')
+
+            ///// 1
+
+            _applicableMovies = _movieList.filter((x, i, a) => new RegExp (_moodSelected.terms.join(" | ")).test(x.overview))
+
+            ////// 2
+
+
+            _applicableMovies = _movieList.filter((x, i, a) => x.overview.toLowerCase().split(/[^a-z]/g).some((word) => _moodSelected.terms.includes(word)))
+
+
+            ///////// 3 
+            _plots = _movieList.map(x => x.overview)
+            for (let plotIndex = 0; plotIndex < _plots.length; plotIndex++) {
+                for (let wordIndex = 0; wordIndex < _moodSelected.terms.length; wordIndex++) {
+                    if (_plots[plotIndex].includes(_moodSelected.terms[wordIndex])) {
+                        _applicableMovies.push(_movieList[plotIndex])
+                    }
+                }
+            }
+
+            ////////////////
+
+            resolve(_applicableMovies)
+
+        })
+    }
     const _processMovies = () => {
         if (!_moodSelected.terms || _moodSelected.movieList.length) {
             _movieList = _.sample(_.uniq(_movieList), 6)
         }else {
             console.log(_movieList)
-            _applicableMovies = _movieList.filter((x, i, a) => x.overview.toLowerCase().split(' ').some((word) => _moodSelected.terms.includes(word)))
-            console.log(_applicableMovies)
+            console.time('here')
+            // _applicableMovies = _movieList.filter((x, i, a) => new RegExp (_moodSelected.terms.join(" | ")).test(x.overview))
+            // _applicableMovies = _movieList.filter((x, i, a) => x.overview.toLowerCase().split(/[^a-z]/g).some((word) => _moodSelected.terms.includes(word)))
+        //     console.log(_applicableMovies)
 
-        }
-        // console.log(_movieList)
-        //     _plots = _movieList.map(x => x.overview)
-        //     for (let plotIndex = 0; plotIndex < _plots.length; plotIndex++) {
-        //         for (let wordIndex = 0; wordIndex < _moodSelected.terms.length; wordIndex++) {
-        //             if (_plots[plotIndex].includes(_moodSelected.terms[wordIndex])) {
-        //                 _applicableMovies.push(_movieList[plotIndex])
-        //             }
-        //         }
-        //     }
-        //     // console.log(_movieList.filter((x, i, a) => {_moodSelected.terms.map((term) => x.overview.toLowerCase().includes(term))}))
-        //     _movieList = _.sample(_.uniq(_applicableMovies), 6)
         // }
+            _plots = _movieList.map(x => x.overview)
+            for (let plotIndex = 0; plotIndex < _plots.length; plotIndex++) {
+                for (let wordIndex = 0; wordIndex < _moodSelected.terms.length; wordIndex++) {
+                    if (_plots[plotIndex].includes(_moodSelected.terms[wordIndex])) {
+                        _applicableMovies.push(_movieList[plotIndex])
+                    }
+                }
+            }
+            
+        }
+        console.timeEnd('here')
         console.log(_applicableMovies)
         console.log(_.uniq(_applicableMovies))
+        _movieList = _.sample(_.uniq(_applicableMovies), 6)
     }
 
     const processMovies = () => _processMovies()
 
     const grabMovies = () => {
         _queryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${_moodSelected.genres[0]}|${_moodSelected.genres[1]}|${_moodSelected.genres[2]}&page=${_page}&include_adult=false&language=en-US&api_key=${_tmdbAPIkey}`;
-        (_page >= 40 || _rateLimit < 1) ? _processMovies () : _ajaxCall(_queryUrl)
+        (_page >= 40 || _rateLimit < 1) ? _speedTest().then((res) => { console.timeEnd('sort'); console.log(res)}): _ajaxCall(_queryUrl)
+        // (_page >= 40 || _rateLimit < 1) ? _processMovies () : _ajaxCall(_queryUrl)
         
     }
 
@@ -226,7 +260,8 @@ $('.moodButtons').click(function () {
     setMood($(this).attr('mood'))
     let chosenMood = getMood();
     console.log(chosenMood)
-    chosenMood.movieList.length ? processMovies() : grabMovies()
+    // chosenMood.movieList.length ? processMovies() : grabMovies()
+    grabMovies()
     // manyRandomMovies(yourMood);
 })
 
