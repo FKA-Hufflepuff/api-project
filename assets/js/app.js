@@ -47,17 +47,21 @@ const mainModule = (() => {
     let _rateLimit = 40
     let _queryUrl = ''
     let _page = 1
+    let plotMap = new Map();
 
 
     const resetPage = () => {}
 
     const _setMood = input => {
         _moodSelected = _moods[input]
-        // return _moodSelected
+        plotMap.clear();
+        if (_moodSelected.terms) _moodSelected.terms.map(x => plotMap.set(x, []))
     }
     const setMood = input => _setMood(input)
 
     const getMood = () => _moodSelected;
+
+    const _plotFilter = movies => movies.filter((x, i, a) => (x.overview.toLowerCase().split(/[^a-z]/g).filter(word => plotMap.has(word))).length)
 
     const _ajaxCall = queryUrl => {
         $.ajax({
@@ -65,78 +69,26 @@ const mainModule = (() => {
                 url: queryUrl
             })
             .done((data, textStatus, jqXHR) => {
-                _movieList = _movieList.concat(data.results)
+                _movieList = (!_moodSelected.terms) ? _movieList.concat(data.results) : _movieList.concat(_plotFilter(data.results));
                 _page++;
                 _rateLimit = jqXHR.getResponseHeader('X-RateLimit-Remaining')
                 grabMovies()
             })
     }
 
-
-    const _speedTest = () => {
-        return new Promise((resolve, reject) => {
-            console.time('sort')
-
-            ///// 1
-
-            _applicableMovies = _movieList.filter((x, i, a) => new RegExp (_moodSelected.terms.join(" | ")).test(x.overview))
-
-            ////// 2
-
-
-            _applicableMovies = _movieList.filter((x, i, a) => x.overview.toLowerCase().split(/[^a-z]/g).some((word) => _moodSelected.terms.includes(word)))
-
-
-            ///////// 3 
-            _plots = _movieList.map(x => x.overview)
-            for (let plotIndex = 0; plotIndex < _plots.length; plotIndex++) {
-                for (let wordIndex = 0; wordIndex < _moodSelected.terms.length; wordIndex++) {
-                    if (_plots[plotIndex].includes(_moodSelected.terms[wordIndex])) {
-                        _applicableMovies.push(_movieList[plotIndex])
-                    }
-                }
-            }
-
-            ////////////////
-
-            resolve(_applicableMovies)
-
-        })
-    }
     const _processMovies = () => {
-        if (!_moodSelected.terms || _moodSelected.movieList.length) {
-            _movieList = _.sample(_.uniq(_movieList), 6)
-        }else {
-            console.log(_movieList)
-            console.time('here')
-            // _applicableMovies = _movieList.filter((x, i, a) => new RegExp (_moodSelected.terms.join(" | ")).test(x.overview))
-            // _applicableMovies = _movieList.filter((x, i, a) => x.overview.toLowerCase().split(/[^a-z]/g).some((word) => _moodSelected.terms.includes(word)))
-        //     console.log(_applicableMovies)
-
-        // }
-            _plots = _movieList.map(x => x.overview)
-            for (let plotIndex = 0; plotIndex < _plots.length; plotIndex++) {
-                for (let wordIndex = 0; wordIndex < _moodSelected.terms.length; wordIndex++) {
-                    if (_plots[plotIndex].includes(_moodSelected.terms[wordIndex])) {
-                        _applicableMovies.push(_movieList[plotIndex])
-                    }
-                }
-            }
-            
-        }
-        console.timeEnd('here')
-        console.log(_applicableMovies)
-        console.log(_.uniq(_applicableMovies))
-        _movieList = _.sample(_.uniq(_applicableMovies), 6)
+        return new Promise((resolve, reject) => {
+            console.log(_movieList);
+            resolve(_.sample((_movieList), 6))
+        })
     }
 
     const processMovies = () => _processMovies()
 
     const grabMovies = () => {
         _queryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${_moodSelected.genres[0]}|${_moodSelected.genres[1]}|${_moodSelected.genres[2]}&page=${_page}&include_adult=false&language=en-US&api_key=${_tmdbAPIkey}`;
-        (_page >= 40 || _rateLimit < 1) ? _speedTest().then((res) => { console.timeEnd('sort'); console.log(res)}): _ajaxCall(_queryUrl)
-        // (_page >= 40 || _rateLimit < 1) ? _processMovies () : _ajaxCall(_queryUrl)
-        
+        (_page >= 40 || _rateLimit < 1) ? _processMovies().then((res) => console.log(res)): _ajaxCall(_queryUrl)
+
     }
 
     return {
@@ -260,9 +212,7 @@ $('.moodButtons').click(function () {
     setMood($(this).attr('mood'))
     let chosenMood = getMood();
     console.log(chosenMood)
-    // chosenMood.movieList.length ? processMovies() : grabMovies()
-    grabMovies()
-    // manyRandomMovies(yourMood);
+    chosenMood.movieList.length ? processMovies() : grabMovies()
 })
 
 
@@ -276,4 +226,4 @@ $('.moodButtons').click(function () {
 
 
 /////////////Box of Shame //////////////////
-            // _movieList.map(x => x.overview.split(' ')).map(x => x.filter((e, i, a) => _moodSelected.terms.indexOf(e) != -1)).filter((x, i, a) => {if (a[i].length) {_applicableMovies.push(_movieList[i]); return _applicableMovies}})
+// _movieList.map(x => x.overview.split(' ')).map(x => x.filter((e, i, a) => _moodSelected.terms.indexOf(e) != -1)).filter((x, i, a) => {if (a[i].length) {_applicableMovies.push(_movieList[i]); return _applicableMovies}})
