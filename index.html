@@ -40,31 +40,31 @@
             <div class="buttonContainer container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="happy">
+                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="_happy">
                             <img class="img-responsive" src="https://cdn.shopify.com/s/files/1/1061/1924/files/Smiling_Emoji_with_Eyes_Opened.png?9898922749706957214">
                         </button>
 
-                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="sad">
+                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="_sad">
                             <img class="img-responsive" src="https://cdn.shopify.com/s/files/1/1061/1924/files/Crying_Face_Emoji.png?9898922749706957214">
                         </button>
 
-                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="mad">
+                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="_mad">
                             <img class="img-responsive" src="https://cdn.shopify.com/s/files/1/1061/1924/files/Very_Angry_Emoji.png?9898922749706957214">
                         </button>
 
-                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="lonely">
+                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="_lonely">
                             <img class="img-responsive" src="https://cdn.shopify.com/s/files/1/1061/1924/files/Confused_Face_Emoji.png?9898922749706957214">
                         </button>
 
-                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="inLove">
+                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="_inLove">
                             <img class="img-responsive" src="https://cdn.shopify.com/s/files/1/1061/1924/files/Heart_Eyes_Emoji.png?9898922749706957214">
                         </button>
 
-                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="silly">
+                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="_silly">
                             <img class="img-responsive" src="https://cdn.shopify.com/s/files/1/1061/1924/files/Tongue_Out_Emoji_with_Winking_Eye.png?9898922749706957214">
                         </button>
 
-                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="random">
+                        <button type="button" class="btn-lg btn-outline-light moodButtons" mood="_random">
                             <img class="img-responsive" src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/129/game-die_1f3b2.png">
                         </button>
                     </div>
@@ -127,14 +127,55 @@
         </div>
     </div>
 
-    <div id="cardsGoHere"></div>
+    <div id="cardsGoHere" style="display: none">
+        <div class="container" id="cardContainer">
+            <div class="row" id="movieCards1">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 mx-auto my-2" id="card0">
+                    <div id="moodMovie0"><img class="moviePoster img-thumbnail img-fluid" src="#"></div>
+                    <h5 class="movieTitle"></h5>
+                    <div id="btnGroup0" class="btn-group" role="group"><button type="button" class="btn btn-secondary"><i
+                                class="fa fa-film" aria-hidden="true"></i></button><a href="#" target="_blank" class="btn btn-warning imdbBtn" style="display: none">IMDb</a></div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 mx-auto my-2" id="card1">
+                    <div id="moodMovie1"><img class="moviePoster img-thumbnail img-fluid" src="#"></div>
+                    <h5 class="movieTitle"></h5>
+                    <div id="btnGroup1" class="btn-group" role="group"><button type="button" class="btn btn-secondary"><i
+                                class="fa fa-film" aria-hidden="true"></i></button><a href="#" target="_blank" class="btn btn-warning imdbBtn" style="display: none">IMDb</a></div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 mx-auto my-2" id="card2">
+                    <div id="moodMovie2"><img class="moviePoster img-thumbnail img-fluid" src="#"></div>
+                    <h5 class="movieTitle"></h5>
+                    <div id="btnGroup2" class="btn-group" role="group"><button type="button" class="btn btn-secondary"><i
+                                class="fa fa-film" aria-hidden="true"></i></button><a href="#" target="_blank" class="btn btn-warning imdbBtn" style="display: none">IMDb</a></div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 mx-auto my-2" id="card3">
+                    <div id="moodMovie3"><img class="moviePoster img-thumbnail img-fluid" src="#"></div>
+                    <h5 class="movieTitle"></h5>
+                    <div id="btnGroup3" class="btn-group" role="group"><button type="button" class="btn btn-secondary"><i
+                                class="fa fa-film" aria-hidden="true"></i></button><a href="#" target="_blank" class="btn btn-warning imdbBtn" style="display: none">IMDb</a></div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 mx-auto my-2" id="card4">
+                    <div id="moodMovie4"><img class="moviePoster img-thumbnail img-fluid" src="#"></div>
+                    <h5 class="movieTitle"></h5>
+                    <div id="btnGroup4" class="btn-group" role="group"><button type="button" class="btn btn-secondary"><i
+                                class="fa fa-film" aria-hidden="true"></i></button><a href="#" target="_blank" class="btn btn-warning imdbBtn" style="display: none">IMDb</a></div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 mx-auto my-2" id="card5">
+                    <div id="moodMovie5"><img class="moviePoster img-thumbnail img-fluid" src="#"></div>
+                    <h5 class="movieTitle"></h5>
+                    <div id="btnGroup5" class="btn-group" role="group"><button type="button" class="btn btn-secondary"><i
+                                class="fa fa-film" aria-hidden="true"></i></button><a href="#" target="_blank" class="btn btn-warning imdbBtn" style="display: none">IMDb</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="assets/js/underscore-min.js"></script>
-    <script type="text/javascript" src="assets/js/app.js"></script>
+    <script src="assets/js/app.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
 

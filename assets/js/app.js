@@ -1,32 +1,183 @@
-const tmdbAPIkey = 'c20ca68e2a577a2aebe1461e51d16a32';
-const omdbAPIkey = '8a053050'
-let moodIndex = 0;
-let yourMood = {};
-let movieList = [];
-let movieTitles = [];
-let carouselLoaded = false;
-let players = [{}, {}, {}, {}, {}, {}]
-let allGenres = [28, 12, 16, 35, 80, 99, 18, 10751, 14, 36, 27, 10402, 9648, 10749, 878, 10770, 53, 10752, 37]
-let moodWord = '';
+const mainModule = (() => {
+    const _tmdbAPIkey = 'c20ca68e2a577a2aebe1461e51d16a32'
+    const _omdbAPIkey = '8a053050'
+    const _allGenres = [28, 12, 16, 35, 80, 99, 18, 10751, 14, 36, 27, 10402, 9648, 10749, 878, 10770, 53, 10752, 37]
+    const _moods = {
+        _happy: {
+            genres: [16, 35, 10751],
+            terms: ['friend', 'friends', 'family', 'celebration', 'comedy', 'funny'],
+            movieList: []
+        },
+        _sad: {
+            genres: [18, 9648, 10749],
+            terms: ['dark', 'tragic', 'lonely', 'loss', 'death', 'dying', 'dead', 'cry', 'lose', 'sad', 'alone'],
+            movieList: []
+        },
+        _mad: {
+            genres: [28, 53, 10752],
+            terms: ['cruel', 'angry', 'ruin', 'anger', 'mad', 'madness', 'violence', 'fight', 'kill', 'destroy', 'destruction', 'revenge'],
+            movieList: []
+        },
+        _lonely: {
+            genres: [99, 878, 10749],
+            terms: ['dystopian', 'heartbroken', 'personal', 'lonely', 'loss', 'heartbreak', 'seperation', 'break-up', 'abandon', 'alone', 'love'],
+            movieList: []
+        },
+        _inLove: {
+            genres: [12, 35, 10749],
+            terms: ['magical', 'charming', 'love', 'romance', 'romantic', 'wedding', 'marriage', 'boyfriend', 'girlfriend'],
+            movieList: []
+        },
+        _silly: {
+            genres: [35, 14, 10402],
+            terms: ['exciting', 'outrageous', 'laughter', 'satire', 'comedy', 'wild', 'high jinks', 'mockumentary', 'funny', 'laughter', 'party', 'scheme'],
+            movieList: []
+        },
+        _random: {
+            genres: _.sample(_allGenres, 3),
+            terms: null,
+            movieList: []
+        }
+    }
+    let _moodSelected = {}
+    let _carouselLoaded = false
+    let _rateLimit = 40
+    let _queryUrl = ''
+    let _page = 1
+    let _plotMap = new Map();
 
-//////////////// Mood Profile Construction 
-function MoodProfile(moodEnglish, moodIndex, genreIds, plotWords) {
-    this.english = moodEnglish;
-    this.index = moodIndex;
-    this.genres = genreIds;
-    this.plotWords = plotWords;
-}
-const happy = new MoodProfile('happy', 0, [16, 35, 10751], ['friends', 'family', 'celebration', 'comedy', 'funny'])
-const sad = new MoodProfile('sad', 1, [18, 9648, 10749], ['dark', 'tragic', 'lonely', 'loss', 'death', 'dying', 'dead', 'cry'])
-const mad = new MoodProfile('mad', 2, [28, 53, 10752], ['cruel', 'angry', 'ruin', 'anger', 'mad', 'madness', 'violence', 'fight'])
-const lonely = new MoodProfile('lonely', 3, [99, 878, 10749], ['dystopian', 'heartbroken', 'personal', 'lonely', 'loss', 'heartbreak', 'seperation', 'break-up', 'abandon', 'alone', 'love'])
-const inLove = new MoodProfile('inLove', 4, [12, 35, 10749], ['magical', 'charming', 'love', 'romance', 'romantic', 'wedding', 'marriage', 'boyfriend', 'girlfriend'])
-const silly = new MoodProfile('silly', 5, [35, 14, 10402], ['exciting', 'outrageous', 'laughter', 'satire', 'comedy', 'wild', 'high jinks', 'mockumentary', 'funny', 'laughter', 'party', 'scheme'])
-const random = new MoodProfile('random', 6, _.sample(allGenres, 3), null)
 
-const moodObjectArray = [happy, sad, mad, lonely, inLove, silly, random]
-const moodStringArray = moodObjectArray.map(x => x.english)
-///////////////////////////////////////
+    const resetPage = () => {
+        _moodSelected = {}
+        _page = 1
+        _queryUrl = ''
+        _plotMap = new Map();
+        $('#carouselContainer').hide()
+        $('.cover-heading').hide()
+        $('.mastheadAfterMood').show()
+    }
+
+    const _setMood = input => {
+        _moodSelected = _moods[input]
+        _plotMap.clear();
+        if (_moodSelected.terms) _moodSelected.terms.map(x => _plotMap.set(x, []))
+    }
+    const setMood = input => _setMood(input)
+
+    const getMood = () => _moodSelected;
+
+    const _plotFilter = movies => movies.filter((x, i, a) => (x.overview.toLowerCase().split(/[^a-z]/g).filter(word => _plotMap.has(word))).length)
+
+    const _ajaxCall = queryUrl => {
+        $.ajax({
+                type: 'GET',
+                url: queryUrl
+            })
+            .done((data, textStatus, jqXHR) => {
+                _moodSelected.movieList = (!_moodSelected.terms) ? _moodSelected.movieList.concat(data.results) : _moodSelected.movieList.concat(_plotFilter(data.results));
+                _page++;
+                _rateLimit = jqXHR.getResponseHeader('X-RateLimit-Remaining')
+                grabMovies()
+            })
+    }
+
+    const _carouselFiller = (index, movieList) => {
+        let players = []
+        movieTitles = movieList.map(x => x.title);
+        $(`#slide${index}, #carouselIndicator${index}`).addClass('active');
+        $(`#slide${index}, #carouselIndicator${index}`).siblings().removeClass('active');
+        if (!_carouselLoaded) {
+            $('#carouselContainer').show();
+            $('.carousel').carousel('pause')
+            for (let i = 0; i < 6; i++) {
+                const onPlayerReady = (event) => {
+                    $('#videoCarousel').on('slide.bs.carousel', () => {
+                        event.target.pauseVideo()
+                    })
+                    $('.moodButtons').click(() => {
+                        event.target.pauseVideo()
+                    })
+                    event.target.cuePlaylist({
+                        listType: 'search',
+                        list: movieTitles[i] + 'movie trailer'
+                    })
+                }
+                players[i] = new YT.Player(`moodMovie${i}`, {
+                    height: '360',
+                    width: '640',
+                    videoId: '',
+                    playerVars: {
+                        listType: 'search',
+                        list: '',
+                        suggestedQuality: 'large'
+                    },
+                    events: {
+                        'onReady': onPlayerReady
+                    }
+                })
+            }
+            _carouselLoaded = true;
+        } else {
+            for (let i = 0; i < 6; i++) {
+                players[i].cuePlaylist({
+                    listType: 'search',
+                    list: movieTitles[i] + ' trailer'
+                })
+            }
+        }
+    }
+
+    const _cardGenerator = (movieList) => {
+        $('#cardsGoHere').hide();
+        movieList.map((movie, i, a) => {
+            $(`#card${i} .moviePoster`).attr('src', `https://image.tmdb.org/t/p/w185/${movie.poster_path}`)
+            $(`#card${i} .movieTitle`).text(`${movie.title}`)
+            let imdbUrl = `https://omdbapi.com/?apikey=${_omdbAPIkey}&t=${movie.title}`;
+            $.get(imdbUrl).then((response) => {
+                (response.Response === 'True') ?
+                $(`#card${i} .imdbBtn`).attr('href', `https://www.imdb.com/title/${response.imdbID}`).show():
+                    $(`#card${i} .imdbBtn`).hide()
+            })
+            $(`#btnGroup${i}`).click(() => {
+                $('.moviePoster').hide()
+                $('#carouselContainer').show();
+                _carouselFiller(i, movieList);
+            })
+        })
+        $('#cardsGoHere').show();
+    }
+
+    const _processMovies = () => {
+        return new Promise((resolve, reject) => {
+            console.log(_moodSelected.movieList);
+            resolve(_.sample((_moodSelected.movieList), 6))
+        })
+    }
+
+    const processMovies = () => _processMovies().then(res => _cardGenerator(res))
+
+    const grabMovies = () => {
+        _queryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${_moodSelected.genres[0]}|${_moodSelected.genres[1]}|${_moodSelected.genres[2]}&page=${_page}&include_adult=false&language=en-US&api_key=${_tmdbAPIkey}`;
+        (_page >= 40 || _rateLimit < 1) ? _processMovies().then(res => _cardGenerator(res)): _ajaxCall(_queryUrl)
+
+    }
+
+    return {
+        resetPage,
+        setMood,
+        getMood,
+        processMovies,
+        grabMovies
+    }
+})()
+
+const {
+    resetPage,
+    setMood,
+    getMood,
+    grabMovies,
+    processMovies
+} = mainModule;
 
 ///////////// Load iFrame API Asynchronously 
 let tag = document.createElement('script');
@@ -34,141 +185,13 @@ tag.src = "https://www.youtube.com/iframe_api";
 $(tag).insertBefore($('script:first'))
 /////////////////////////////////////////////////
 
-//////////////// Places iFrames into Carousel
-const carouselFiller = (index, movieList) => {
-
-    movieTitles = movieList.map(x => x.title);
-    $(`#slide${index}`).addClass('active');
-    $(`#slide${index}`).siblings().removeClass('active');
-    $(`#carouselIndicator${index}`).addClass('active');
-    $(`#carouselIndicator${index}`).siblings().removeClass('active')
-    if (carouselLoaded === false) {
-        $('#carouselContainer').show();
-        $('.carousel').carousel('pause')
-        for (let i = 0; i < 6; i++) {
-            const onPlayerReady = (event) => {
-                $('#videoCarousel').on('slide.bs.carousel', () => {
-                    event.target.pauseVideo()
-                })
-                $('.moodButtons').click(() => {
-                    event.target.pauseVideo()
-                })
-                event.target.cuePlaylist({
-                    listType: 'search',
-                    list: movieTitles[i] + 'movie trailer'
-                })
-            }
-            players[i] = new YT.Player(`moodMovie${i}`, {
-                height: '360',
-                width: '640',
-                videoId: '',
-                playerVars: {
-                    listType: 'search',
-                    list: '',
-                    suggestedQuality: 'large'
-                },
-                events: {
-                    'onReady': onPlayerReady
-                }
-            })
-        }
-        carouselLoaded = true;
-    } else {
-        for (let i = 0; i < 6; i++) {
-            players[i].cuePlaylist({
-                listType: 'search',
-                list: movieTitles[i] + ' trailer'
-            })
-        }
-    }
-}
-////////////////////////
-
-//////////////////////// Get IMDB IDs
-const imdbIdGetter = (movieList) => {
-    let imdbUrl = '';
-    for (let i = 0; i < movieList.length; i++) {
-        imdbUrl = `https://omdbapi.com/?apikey=${omdbAPIkey}&t=${movieList[i].title}`
-        $.get(imdbUrl).then((response) => {
-            if (response.Response === 'True') {
-                $(`#card${i}`).append(`<a href="https://www.imdb.com/title/${response.imdbID}" target="_blank" class="btn btn-warning imdbBtn">IMDb</a>`)
-            }
-        })
-    }
-}
-////////////////////////
-
-///////////////////// Creates movie cards
-const cardGenerator = (movieList) => {
-    $('#cardsGoHere').empty();
-    $('#cardsGoHere').append('<div class="container" id="cardContainer">')
-    $('#cardContainer').append('<div class="row" id="movieCards1">')
-    for (let cardIndex = 0; cardIndex < movieList.length; cardIndex++) {
-        let movieObject = $(`<div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 mx-auto my-2" id="card${cardIndex}">`)
-        let poster = $(`<div id="moodMovie${cardIndex}">` + `<img class="moviePoster img-thumbnail img-fluid" src="https://image.tmdb.org/t/p/w185/${movieList[cardIndex].poster_path}">`)
-        let movieInfo = $(`<h5>${movieList[cardIndex].title}</h5>`)
-        let trailerBtn = $(`<div id="btnGroup${cardIndex}" class="btn-group" role="group"><button type="button" class="btn btn-secondary"><i class="fa fa-film" aria-hidden="true"></i></button></div>`)
-        $('#movieCards1').append(movieObject)
-        $(`#card${cardIndex}`).append(poster, movieInfo, trailerBtn)
-        $(`#btnGroup${cardIndex}`).click(() => {
-            $('.moviePoster').hide()
-            $('#carouselContainer').show();
-            carouselFiller(cardIndex, movieList);
-        })
-    }
-    imdbIdGetter(movieList);
-}
-/////////////////////////
-
-//////////////////// Check plots for keywords 
-const checkPlots = (allMovies, plots, mood) => {
-    let allApplicableMovies = []
-    for (let plotIndex = 0; plotIndex < plots.length; plotIndex++) {
-        for (let wordIndex = 0; wordIndex < mood.plotWords.length; wordIndex++) {
-            if (plots[plotIndex].includes(mood.plotWords[wordIndex])) {
-                allApplicableMovies.push(allMovies[plotIndex])
-            }
-        }
-        if (plotIndex === plots.length - 1) {
-            movieList = _.sample(_.uniq(allApplicableMovies), 6)
-            cardGenerator(movieList);
-        }
-    }
-}
-//////////////////////////////////
-
-////////////////////// Grabs movies by genre
-const manyRandomMovies = (yourMood) => {
-    let arrayOfMovieArrays = [];
-    for (let page = 1; page <= 40; page++) {
-        let moodQueryUrl = `https://api.themoviedb.org/3/discover/movie?with_original_language=en&with_genres=${yourMood.genres[0]}|${yourMood.genres[1]}|${yourMood.genres[2]}&page=${page}&include_adult=false&language=en-US&api_key=${tmdbAPIkey}`;
-        $.get(moodQueryUrl).then((response) => {
-            arrayOfMovieArrays.push(response.results)
-            if (arrayOfMovieArrays.length === 40) {
-                let allMovies = _.flatten(arrayOfMovieArrays);
-                ////// Skips plots for random button ////////
-                if (!yourMood.plotWords) {
-                    movieList = _.sample(_.uniq(allMovies), 6);
-                    cardGenerator(movieList);
-                } else {
-                    let allPlots = _.pluck(allMovies, 'overview');
-                    checkPlots(allMovies, allPlots, yourMood);
-                }
-            }
-        })
-    }
-}
-////////////////////
-
 /////////////////////// Mood selection
 $('.moodButtons').click(function () {
-    $('#carouselContainer').hide()
-    $('#soloMovie').hide()
-    movieList = [];
-    moodWord = $(this).attr('mood')
-    moodIndex = moodStringArray.indexOf(moodWord);
-    let yourMood = moodObjectArray[moodIndex]
-    manyRandomMovies(yourMood);
-    $('.cover-heading').hide()
-    $('.mastheadAfterMood').show()
+    resetPage();
+    setMood($(this).attr('mood'))
+    let chosenMood = getMood();
+    console.log(chosenMood)
+    chosenMood.movieList.length ? processMovies() : grabMovies()
 })
+
+
